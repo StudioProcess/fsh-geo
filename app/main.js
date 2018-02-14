@@ -11,6 +11,32 @@ let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 let geo;
 
+
+// Aircraft principal axes:
+// yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
+let banner_options = {
+  length: 20, // along longitudinal axis
+  width: 10, // along transversal axis
+  div_length: 100,
+  div_width: 50,
+  noise_heading: {
+    seed: 111,
+    freq: 0.2,
+    amp: 1
+  },
+  noise_pitch: {
+    seed: 222,
+    freq: 0.2,
+    amp: 1
+  },
+  noise_roll: {
+    seed: 333,
+    freq: 0.2,
+    amp: 1
+  },
+};
+
+
 main();
 
 
@@ -38,11 +64,15 @@ function setup() {
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   camera.position.z = 25;
   
-  scene.add( createDistortedCylinderObj() );
+  // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
 
   // printIndexedVertices(geo);
   
+  let geo = createBanner(banner_options);
+  let mat = new THREE.LineBasicMaterial({ color: 0x1e90ff });
+  let mesh = new THREE.Line(geo, mat);
+  scene.add(mesh);
 }
 
 function createDistortedCylinderObj() {
@@ -123,8 +153,33 @@ function createAxesObj(scale = 1) {
 }
 
 
+// Aircraft principal axes:
+// yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
+function createBanner(options) {
+  let path = new THREE.Geometry();
+  let aircraft = new THREE.Object3D();
+  let pos = aircraft.position;
+  let speed = options.length / options.div_length;
+  
+  // simulate path along longitudinal axis (x)
+  for (let x=0; x<options.div_length; x++) {
+    path.vertices.push( aircraft.position.clone() );
+    let roll = getnoise(options.noise_roll, pos.x, pos.y, pos.z) * Math.PI * 2;
+    let heading = getnoise(options.noise_heading, pos.x, pos.y, pos.z) * Math.PI * 2;
+    let pitch = getnoise(options.noise_pitch, pos.x, pos.y, pos.z) * Math.PI * 2;
+    aircraft.rotation.set( roll, heading, pitch );
+    aircraft.translateX(speed);
+  }
+  return path;
+}
 
-
+function getnoise(options, x=0, y=0, z=0) {
+  noise.seed(options.seed);
+  let n = noise.simplex3(x*options.freq, y*options.freq, z*options.freq);
+  n = (n + 1) / 2;
+  if (n > 1) { n = 1; } else if (n < 0) { n = 0; }
+  return n * options.amp;
+}
 
 document.addEventListener("keydown", e => {
   // console.log(e.key, e.keyCode, e);
