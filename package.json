@@ -1,0 +1,24 @@
+{
+  "name": "three-starter",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "github:StudioProcess/three_starter",
+  "engines": {
+    "node": ">=8.9.0",
+    "npm": ">=5.6.0"
+  },
+  "scripts": {
+    "start": "browser-sync start --server --port 8080 --files index.html app",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "reinstall": "rm -rf node_modules && npm install"
+  },
+  "keywords": [],
+  "author": "Process <contact@process.studio> (https://process.studio)",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "three": "^0.89.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.23.5"
+  }
+}
