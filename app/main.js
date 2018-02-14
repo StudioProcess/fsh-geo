@@ -15,11 +15,8 @@ main();
 
 
 function main() {
-  
   setup(); // set up scene
-  
   loop(); // start game loop
-  
 }
 
 function loop(time) { // eslint-disable-line no-unused-vars
@@ -28,7 +25,6 @@ function loop(time) { // eslint-disable-line no-unused-vars
 }
 
 function setup() {
-  
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -42,15 +38,21 @@ function setup() {
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   camera.position.z = 25;
   
+  scene.add( createDistortedCylinderObj() );
+  scene.add( createAxesObj(10) );
+
+  // printIndexedVertices(geo);
+  
+}
+
+function createDistortedCylinderObj() {
   let geo = new THREE.CylinderBufferGeometry( 100, 100, 100, 200, 100, true );
+  console.log(geo);
   displaceGeo(geo);
   perforateGeo(geo);
   let mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let mesh = new THREE.Mesh( geo, mat );
-  scene.add( mesh );
-  scene.add( createAxesObj(10) );
-  console.log(geo);
-  // printIndexedVertices(geo);
+  return mesh;
 }
 
 
