@@ -15,10 +15,10 @@ let geo;
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
-  length: 20, // along longitudinal axis
-  width: 10, // along transversal axis
-  div_length: 100,
-  div_width: 50,
+  length: 200, // along longitudinal axis
+  width: 2.5, // along transversal axis
+  length_segments: 2000,
+  width_segments: 25,
   noise_heading: {
     seed: 111,
     freq: 0.2,
@@ -66,13 +66,18 @@ function setup() {
   
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
-
-  // printIndexedVertices(geo);
   
-  let geo = createBanner(banner_options);
-  let mat = new THREE.LineBasicMaterial({ color: 0x1e90ff });
-  let mesh = new THREE.Line(geo, mat);
+  // printIndexedVertices(geo);
+  let banner = createBanner(banner_options);
+  
+  let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
+  let mesh = new THREE.Mesh(banner.plane, plane_mat);
+  
+  let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
+  let line = new THREE.Line(banner.path, line_mat);
+  
   scene.add(mesh);
+  scene.add(line);
 }
 
 function createDistortedCylinderObj() {
@@ -156,21 +161,37 @@ function createAxesObj(scale = 1) {
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 function createBanner(options) {
+  let plane = new THREE.PlaneBufferGeometry(options.length, options.width, options.length_segments, options.width_segments);
+  // printIndexedVertices(plane);
+  console.log(plane);
+  
   let path = new THREE.Geometry();
   let aircraft = new THREE.Object3D();
-  let pos = aircraft.position;
-  let speed = options.length / options.div_length;
+  let speed = options.length / options.length_segments;
   
   // simulate path along longitudinal axis (x)
-  for (let x=0; x<options.div_length; x++) {
+  for (let x=0; x<=options.length_segments; x++) {
     path.vertices.push( aircraft.position.clone() );
+    // set respective column of plane (along z axis)
+    let seg = options.width / options.width_segments; // size of one segment
+    let v = new THREE.Vector3(0,0,1).applyEuler(aircraft.rotation); // z-axis unit vector
+    let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.width/2) );
+    let inc = v.multiplyScalar(seg);
+    for (let y=0; y<=options.width_segments; y++) {
+      let idx = (y * (options.length_segments+1) + x) * 3;
+      plane.attributes.position.array[idx+0] = pos.x;
+      plane.attributes.position.array[idx+1] = pos.y;
+      plane.attributes.position.array[idx+2] = pos.z;
+      pos.add(inc);
+    }
+    pos = aircraft.position;
     let roll = getnoise(options.noise_roll, pos.x, pos.y, pos.z) * Math.PI * 2;
     let heading = getnoise(options.noise_heading, pos.x, pos.y, pos.z) * Math.PI * 2;
     let pitch = getnoise(options.noise_pitch, pos.x, pos.y, pos.z) * Math.PI * 2;
     aircraft.rotation.set( roll, heading, pitch );
     aircraft.translateX(speed);
   }
-  return path;
+  return { path, plane };
 }
 
 function getnoise(options, x=0, y=0, z=0) {
