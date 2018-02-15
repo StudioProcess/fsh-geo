@@ -62,24 +62,31 @@ function setup() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  camera.position.z = 25;
+  camera.position.z = 16;
   
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
   
-  // printIndexedVertices(geo);
+
   let banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane);
-  
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let mesh = new THREE.Mesh(banner.plane, plane_mat);
-  
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
   scene.add(mesh);
   scene.add(line);
   // scene.add(createNormalsObj(banner.plane));
+   
+  scene.add( createFractalNoiseObj({
+    seed: 1,
+    freq: 0.1, 
+    amp: 5,
+    octaves: 5,
+    persistence: 0.5
+  }, 
+  20, 400) );
 }
 
 function createDistortedCylinderObj() { // eslint-disable-line
@@ -161,7 +168,8 @@ function createAxesObj(scale = 1) {
 }
 
 
-function createNormalsObj(inputGeo, length = 0.1) {
+// For testing normals of a BufferGeometry
+function createNormalsObj(inputGeo, length = 0.1) { // eslint-disable-line no-unused-vars
   // console.log(inputGeo);
   let p = inputGeo.attributes.position.array;
   let n = inputGeo.attributes.normal.array;
@@ -220,13 +228,60 @@ function createBannerGeo(options) {
   return { path, plane };
 }
 
+// Returns simplex noise of range [0, 1] * amp
+// Options: seed, freq, amp
 function getnoise(options, x=0, y=0, z=0) {
+  let defaults = { seed: 0, freq: 1, amp: 1 };
+  options = Object.assign(defaults, options);
+  console.log(options);
   noise.seed(options.seed);
   let n = noise.simplex3(x*options.freq, y*options.freq, z*options.freq);
   n = (n + 1) / 2;
   if (n > 1) { n = 1; } else if (n < 0) { n = 0; }
   return n * options.amp;
 }
+
+// Options: seed, freq, amp, octaves, persistence
+function getfractalnoise(options, x=0, y=0, z=0) {
+  let defaults = { seed: 0, freq: 1, amp: 1, octaves: 1, persistence: 0.5 };
+  options = Object.assign(defaults, options);
+  let freq = options.freq;
+  let amp = options.amp;
+  let total = 0;
+  let max_amp = 0; // Track max amplitude; used for normalizing the result
+  for (let i=0; i<options.octaves; i++) {
+    total += getnoise({seed:options.seed, freq, amp}, x, y, z);
+    max_amp += amp;
+    freq *= 2;
+    amp *= options.persistence;
+  }
+  return total / max_amp * options.amp;
+}
+
+function array(length = 0) {
+  let a = [];
+  for (let i=0; i<length; i++) {
+    a.push(i);
+  }
+  return a;
+}
+
+
+// For testing getfractalnoise()
+function createFractalNoiseObj(options, width=1, segments=10) {
+  let x = array(segments+1).map(i => width/segments * i);
+  let y = x.map(x => getfractalnoise(options, x));
+  console.log(x);
+  console.log(y);
+  
+  let geo = new THREE.Geometry();
+  for (let i=0; i<x.length; i++) {
+    geo.vertices.push(new THREE.Vector3(x[i], y[i], 0));
+  }
+  let mat = new THREE.LineBasicMaterial({color:0xffffff});
+  return new THREE.Line(geo, mat);
+}
+
 
 document.addEventListener("keydown", e => {
   // console.log(e.key, e.keyCode, e);
