@@ -15,24 +15,24 @@ let geo;
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
-  length: 20, // along longitudinal axis
-  width: 4, // along transversal axis
-  length_segments: 200,
-  width_segments: 40,
+  length: 25, // along longitudinal axis
+  width: 5, // along transversal axis
+  length_segments: 500,
+  width_segments: 100,
   noise_heading: {
     seed: 111,
-    freq: 0.2,
+    freq: 0.1,
     amp: 1
   },
   noise_pitch: {
     seed: 222,
     freq: 0.2,
-    amp: 1
+    amp: 0.5
   },
   noise_roll: {
     seed: 333,
     freq: 0.2,
-    amp: 1
+    amp: 0.5
   },
 };
 
@@ -70,6 +70,7 @@ function setup() {
 
   let banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane);
+  // perforateGeo(banner.plane);
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let mesh = new THREE.Mesh(banner.plane, plane_mat);
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
@@ -77,16 +78,9 @@ function setup() {
   
   scene.add(mesh);
   scene.add(line);
-  // scene.add(createNormalsObj(banner.plane));
-   
-  scene.add( createFractalNoiseObj({
-    seed: 1,
-    freq: 0.1, 
-    amp: 5,
-    octaves: 5,
-    persistence: 0.5
-  }, 
-  20, 400) );
+  
+  // scene.add(createNormalsObj(banner.plane)); 
+  // scene.add( createFractalNoiseObj({seed: 1, freq: 0.1, amp: 5, octaves: 5, persistence: 0.5}, 20, 400) );
 }
 
 function createDistortedCylinderObj() { // eslint-disable-line
@@ -99,16 +93,15 @@ function createDistortedCylinderObj() { // eslint-disable-line
   return mesh;
 }
 
-
-function displaceGeo( geo, freq = 1, amp = 0.2, ) {
+function displaceGeo( geo, noiseOptions = {freq:0.66, amp:0.5, octaves:2 } ) {
   let pos = geo.attributes.position.array;
   let nrm = geo.attributes.normal.array;
   noise.seed(seed_geo);
   for (let i = 0; i<pos.length/3; i++) {
     let p = new THREE.Vector3(pos[i*3+0], pos[i*3+1], pos[i*3+2]); // vertex position
     let n = new THREE.Vector3(nrm[i*3+0], nrm[i*3+1], nrm[i*3+2]); // vertex normal
-    let d = noise.simplex3(p.x*freq, p.y*freq, p.z*freq); // displacement value (from 3d simplex noise)
-    p.add(n.normalize().multiplyScalar(d*amp));
+    let d = getfractalnoise(noiseOptions, p.x, p.y, p.z); // displacement value (from 3d simplex noise)
+    p.add(n.normalize().multiplyScalar(d));
     pos[i*3+0] = p.x;
     pos[i*3+1] = p.y;
     pos[i*3+2] = p.z;
@@ -117,16 +110,14 @@ function displaceGeo( geo, freq = 1, amp = 0.2, ) {
 }
 
 
-function perforateGeo(geo, thresh = 0.33, iscale = 0.08) {
+function perforateGeo(geo, thresh = 0.3, noiseOptions = {freq:0.25}) {
   let pos = geo.attributes.position.array;
   let idx = geo.index.array.slice(0);
   let idx2 = [];
   noise.seed(seed_perf);
   for (let i = 0; i<pos.length/3; i++) {
     let p = new THREE.Vector3(pos[i*3+0], pos[i*3+1], pos[i*3+2]); // vertex position
-    let n = noise.simplex3(p.x*iscale, p.y*iscale, p.z*iscale);
-    n = (n+1) / 2;
-    if (n > 1) n=1; else if (n < 0) n=0;
+    let n = getfractalnoise(noiseOptions, p.x, p.y, p.z);
     if (n < thresh) {
       // delete all faces including index = i
       for (let j=0; j<idx.length; j+=3) {
@@ -200,6 +191,12 @@ function createBannerGeo(options) {
   
   // simulate path along longitudinal axis (x)
   for (let x=0; x<=options.length_segments; x++) {
+    let apos = aircraft.position;
+    let roll = getfractalnoise(options.noise_roll, apos.x, apos.y, apos.z) * Math.PI * 2;
+    let heading = getfractalnoise(options.noise_heading, apos.x, apos.y, apos.z) * Math.PI * 2;
+    let pitch = getfractalnoise(options.noise_pitch, apos.x, apos.y, apos.z) * Math.PI * 2;
+    aircraft.rotation.set( roll, heading, pitch );
+    
     path.vertices.push( aircraft.position.clone() );
     // set respective column of plane (along z axis)
     let seg = options.width / options.width_segments; // size of one segment
@@ -207,6 +204,7 @@ function createBannerGeo(options) {
     let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.width/2) );
     let inc = v.multiplyScalar(seg);
     let norm = new THREE.Vector3(0,1,0).applyEuler(aircraft.rotation); // normal vector
+    
     for (let y=0; y<=options.width_segments; y++) {
       let idx = (y * (options.length_segments+1) + x) * 3;
       plane_pos[idx+0] = pos.x;
@@ -218,11 +216,7 @@ function createBannerGeo(options) {
       plane_norm[idx+1] = norm.y;
       plane_norm[idx+2] = norm.z;
     }
-    pos = aircraft.position;
-    let roll = getnoise(options.noise_roll, pos.x, pos.y, pos.z) * Math.PI * 2;
-    let heading = getnoise(options.noise_heading, pos.x, pos.y, pos.z) * Math.PI * 2;
-    let pitch = getnoise(options.noise_pitch, pos.x, pos.y, pos.z) * Math.PI * 2;
-    aircraft.rotation.set( roll, heading, pitch );
+    pos = aircraft.position; // reset position
     aircraft.translateX(speed);
   }
   return { path, plane };
@@ -233,7 +227,7 @@ function createBannerGeo(options) {
 function getnoise(options, x=0, y=0, z=0) {
   let defaults = { seed: 0, freq: 1, amp: 1 };
   options = Object.assign(defaults, options);
-  console.log(options);
+  // console.log(options);
   noise.seed(options.seed);
   let n = noise.simplex3(x*options.freq, y*options.freq, z*options.freq);
   n = (n + 1) / 2;
@@ -271,8 +265,6 @@ function array(length = 0) {
 function createFractalNoiseObj(options, width=1, segments=10) {
   let x = array(segments+1).map(i => width/segments * i);
   let y = x.map(x => getfractalnoise(options, x));
-  console.log(x);
-  console.log(y);
   
   let geo = new THREE.Geometry();
   for (let i=0; i<x.length; i++) {
