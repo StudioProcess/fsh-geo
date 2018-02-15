@@ -15,9 +15,9 @@ let geo;
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
-  length: 200, // along longitudinal axis
+  length: 20, // along longitudinal axis
   width: 2.5, // along transversal axis
-  length_segments: 2000,
+  length_segments: 200,
   width_segments: 25,
   noise_heading: {
     seed: 111,
@@ -68,7 +68,8 @@ function setup() {
   scene.add( createAxesObj(10) );
   
   // printIndexedVertices(geo);
-  let banner = createBanner(banner_options);
+  let banner = createBannerGeo(banner_options);
+  let normals = createNormalsObj(banner.plane);
   
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let mesh = new THREE.Mesh(banner.plane, plane_mat);
@@ -78,9 +79,10 @@ function setup() {
   
   scene.add(mesh);
   scene.add(line);
+  scene.add(normals);
 }
 
-function createDistortedCylinderObj() {
+function createDistortedCylinderObj() { // eslint-disable-line
   let geo = new THREE.CylinderBufferGeometry( 100, 100, 100, 200, 100, true );
   console.log(geo);
   displaceGeo(geo);
@@ -158,9 +160,25 @@ function createAxesObj(scale = 1) {
 }
 
 
+function createNormalsObj(inputGeo, length = 0.1) {
+  // console.log(inputGeo);
+  let p = inputGeo.attributes.position.array;
+  let n = inputGeo.attributes.normal.array;
+  let geo = new THREE.Geometry();
+  for (let i=0; i<n.length; i+=3) {
+    let pos = new THREE.Vector3(p[i+0], p[i+1], p[i+2]);
+    geo.vertices.push(pos,
+      new THREE.Vector3(n[i+0], n[i+1], n[i+2]).setLength(length).add(pos),
+    );
+  }
+  let mat = new THREE.LineBasicMaterial({color:0xffffff});
+  return new THREE.LineSegments(geo, mat);
+}
+
+
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
-function createBanner(options) {
+function createBannerGeo(options) {
   let plane = new THREE.PlaneBufferGeometry(options.length, options.width, options.length_segments, options.width_segments);
   // printIndexedVertices(plane);
   console.log(plane);
