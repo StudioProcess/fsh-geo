@@ -16,9 +16,9 @@ let geo;
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
   length: 20, // along longitudinal axis
-  width: 2.5, // along transversal axis
+  width: 4, // along transversal axis
   length_segments: 200,
-  width_segments: 25,
+  width_segments: 40,
   noise_heading: {
     seed: 111,
     freq: 0.2,
@@ -69,7 +69,7 @@ function setup() {
   
   // printIndexedVertices(geo);
   let banner = createBannerGeo(banner_options);
-  let normals = createNormalsObj(banner.plane);
+  displaceGeo(banner.plane);
   
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let mesh = new THREE.Mesh(banner.plane, plane_mat);
@@ -79,7 +79,7 @@ function setup() {
   
   scene.add(mesh);
   scene.add(line);
-  scene.add(normals);
+  // scene.add(createNormalsObj(banner.plane));
 }
 
 function createDistortedCylinderObj() { // eslint-disable-line
@@ -93,19 +93,20 @@ function createDistortedCylinderObj() { // eslint-disable-line
 }
 
 
-function displaceGeo(geo, iscale = 0.5, oscale = 0.2, ) {
+function displaceGeo( geo, freq = 1, amp = 0.2, ) {
   let pos = geo.attributes.position.array;
   let nrm = geo.attributes.normal.array;
   noise.seed(seed_geo);
   for (let i = 0; i<pos.length/3; i++) {
     let p = new THREE.Vector3(pos[i*3+0], pos[i*3+1], pos[i*3+2]); // vertex position
     let n = new THREE.Vector3(nrm[i*3+0], nrm[i*3+1], nrm[i*3+2]); // vertex normal
-    let d = noise.simplex3(p.x*iscale, p.y*iscale, p.z*iscale); // displacement value (from 3d simplex noise)
-    p.add(n.normalize().multiplyScalar(d*oscale));
+    let d = noise.simplex3(p.x*freq, p.y*freq, p.z*freq); // displacement value (from 3d simplex noise)
+    p.add(n.normalize().multiplyScalar(d*amp));
     pos[i*3+0] = p.x;
     pos[i*3+1] = p.y;
     pos[i*3+2] = p.z;
   }
+  return geo;
 }
 
 
