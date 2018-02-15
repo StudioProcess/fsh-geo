@@ -9,8 +9,7 @@ const seed_perf = 1;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
-let geo;
-
+let mesh;
 
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
@@ -50,6 +49,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   renderer.render( scene, camera );
 }
 
+
 function setup() {
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -72,7 +72,7 @@ function setup() {
   displaceGeo(banner.plane);
   // perforateGeo(banner.plane);
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
-  let mesh = new THREE.Mesh(banner.plane, plane_mat);
+  mesh = new THREE.Mesh(banner.plane, plane_mat);
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
@@ -142,7 +142,7 @@ function printIndexedVertices(geo) { // eslint-disable-line no-unused-vars
 
 
 function createAxesObj(scale = 1) {
-  geo = new THREE.Geometry();
+  let geo = new THREE.Geometry();
   geo.vertices.push(
     new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 1, 0, 0 ), // x-axis (red)
     new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 1, 0 ), // y-axis (green)
@@ -284,4 +284,40 @@ document.addEventListener("keydown", e => {
     } else { document.webkitExitFullscreen(); }
   }
   
+  else if (e.key == 'o') {
+    exportOBJ(mesh);
+  }
 });
+
+
+function saveURL(url, filename) {
+  let link = document.createElement('a');
+  link.download = filename;
+  link.href = url;
+  link.click();
+}
+
+function saveBlob(blob, filename) {
+  let url = URL.createObjectURL(blob);
+  saveURL(url, filename);
+  URL.revokeObjectURL(url);
+}
+
+function saveText(string, filename) {
+  let blob = new Blob( [string], {type: 'text/plain'} );
+  saveBlob(blob, filename);
+}
+
+function timestamp() {
+  return new Date().toISOString();
+}
+
+function exportOBJ(mesh) {
+  console.log('exporting');
+  
+  let exporter = new THREE.OBJExporter();
+  let txt = exporter.parse(mesh);
+  console.log(typeof txt);
+  
+  saveText( txt, `obj_${timestamp()}.obj` );
+}
