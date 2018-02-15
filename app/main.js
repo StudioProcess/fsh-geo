@@ -180,6 +180,8 @@ function createNormalsObj(inputGeo, length = 0.1) {
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 function createBannerGeo(options) {
   let plane = new THREE.PlaneBufferGeometry(options.length, options.width, options.length_segments, options.width_segments);
+  let plane_pos = plane.attributes.position.array;
+  let plane_norm = plane.attributes.normal.array;
   // printIndexedVertices(plane);
   console.log(plane);
   
@@ -195,12 +197,17 @@ function createBannerGeo(options) {
     let v = new THREE.Vector3(0,0,1).applyEuler(aircraft.rotation); // z-axis unit vector
     let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.width/2) );
     let inc = v.multiplyScalar(seg);
+    let norm = new THREE.Vector3(0,1,0).applyEuler(aircraft.rotation); // normal vector
     for (let y=0; y<=options.width_segments; y++) {
       let idx = (y * (options.length_segments+1) + x) * 3;
-      plane.attributes.position.array[idx+0] = pos.x;
-      plane.attributes.position.array[idx+1] = pos.y;
-      plane.attributes.position.array[idx+2] = pos.z;
+      plane_pos[idx+0] = pos.x;
+      plane_pos[idx+1] = pos.y;
+      plane_pos[idx+2] = pos.z;
       pos.add(inc);
+      // set normals
+      plane_norm[idx+0] = norm.x;
+      plane_norm[idx+1] = norm.y;
+      plane_norm[idx+2] = norm.z;
     }
     pos = aircraft.position;
     let roll = getnoise(options.noise_roll, pos.x, pos.y, pos.z) * Math.PI * 2;
