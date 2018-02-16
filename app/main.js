@@ -8,8 +8,9 @@ const seed_geo = 0;
 const seed_perf = 1;
 
 let renderer, scene, camera;
+let shaders;
 let controls; // eslint-disable-line no-unused-vars
-let mesh;
+let mesh_wireframe, mesh_gradient;
 
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
@@ -39,8 +40,8 @@ let banner_options = {
 main();
 
 
-function main() {
-  setup(); // set up scene
+async function main() {
+  await setup(); // set up scene
   loop(); // start game loop
 }
 
@@ -50,7 +51,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
 }
 
 
-function setup() {
+async function setup() {
+  shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -67,16 +69,37 @@ function setup() {
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
   
+  let gradient_mat = new THREE.RawShaderMaterial({
+    uniforms: {
+      // a: { value: new THREE.Color(0xff0000) },
+      // b: { value: new THREE.Color(0x00ff00) },
+      // c: { value: new THREE.Color(0x0000ff) },
+      // d: { value: new THREE.Color(0xffff00) },
+      a: { value: new THREE.Color(0xed1c24) },
+      b: { value: new THREE.Color(0xc83e81) },
+      c: { value: new THREE.Color(0x701655) },
+      d: { value: new THREE.Color(0x8781bd) },
+      c1: { value: new THREE.Vector2(0, 0) },
+      c2: { value: new THREE.Vector2(0, 0) },
+      steps: { value: new THREE.Vector2(100, 100) }
+    },
+    vertexShader: shaders['test.vert'],
+    fragmentShader: shaders['test.frag'],
+    side: THREE.DoubleSide,
+  });
+  
 
   let banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane);
   // perforateGeo(banner.plane);
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
-  mesh = new THREE.Mesh(banner.plane, plane_mat);
+  mesh_wireframe = new THREE.Mesh(banner.plane, plane_mat);
+  mesh_gradient = new THREE.Mesh(banner.plane, gradient_mat);
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
-  scene.add(mesh);
+  scene.add(mesh_wireframe);
+  scene.add(mesh_gradient);
   scene.add(line);
   
   // scene.add(createNormalsObj(banner.plane)); 
@@ -285,7 +308,7 @@ document.addEventListener("keydown", e => {
   }
   
   else if (e.key == 'o') {
-    exportOBJ(mesh);
+    exportOBJ(mesh_wireframe);
   }
 });
 
@@ -320,4 +343,20 @@ function exportOBJ(mesh) {
   console.log(typeof txt);
   
   saveText( txt, `obj_${timestamp()}.obj` );
+}
+
+
+async function loadShaders(folder, ...urls) {
+  let promises = urls.map( url => fetch(folder + '/' + url) );
+  return Promise.all(promises).then(responses => {
+    return Promise.all(responses.map(res => {
+      let name = res.url.slice( res.url.lastIndexOf('/') + 1 );
+      return res.text().then(text => { return {name, text}; });
+    }));
+  }).then(shaders => {
+    return shaders.reduce((acc, shader) => {
+      acc[shader.name] = shader.text;
+      return acc;
+    }, {});
+  });
 }
