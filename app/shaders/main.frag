@@ -47,6 +47,8 @@ void main() {
     normal = normalize( cross( dFdx(v_position), dFdy(v_position) ) );
   } else {
     normal = normalize(v_normal);
+    // double sided lighting: flip normal if not front facing
+    normal *= float(gl_FrontFacing) * 2.0 - 1.0;
   }
   
   /* Surface color */
