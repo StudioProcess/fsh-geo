@@ -87,14 +87,16 @@ async function setup() {
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
   
+  let c = [
+    new THREE.Color('#f00'),
+    new THREE.Color('#0f0'),
+    new THREE.Color('#ff0'),
+    new THREE.Color('#00f')
+  ];
+  
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
-      colors: { value: [
-        new THREE.Color('#f00'), 
-        new THREE.Color('#0f0'), 
-        new THREE.Color('#00f'), 
-        new THREE.Color('#ff0'),
-      ]},
+      colors: { value: [ c[0], c[1], c[2], c[3], c[2], c[3], c[0], c[1] ]},
       // colors: { value: [
       //   new THREE.Color(0xed1c24), 
       //   new THREE.Color(0xc83e81), 
