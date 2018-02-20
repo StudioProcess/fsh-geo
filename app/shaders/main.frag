@@ -60,8 +60,8 @@ void main() {
   // geometry.position = - vViewPosition;
   // geometry.normal = normal;
   // geometry.viewDir = normalize( vViewPosition );
-  vec3 toLight = vec3(0.0, 0.0, 1.0); // = (0,0,1) ... direction to camera
-  float dotNL = clamp( dot( normal, toLight ), 0.0, 1.0 );
+  vec3 toCamera = vec3(0.0, 0.0, 1.0); // ... direction to camera (pos. z-axis)
+  float dotNL = clamp( dot( normal, toCamera ), 0.0, 1.0 );
   vec3 diffuse = col * dotNL * diffuseIntesity;
   
   // Diffuse Reflection (Lambertian)

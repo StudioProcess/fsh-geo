@@ -8,7 +8,7 @@
     "npm": ">=5.6.0"
   },
   "scripts": {
-    "start": "browser-sync start --server --port 8080 --files index.html app",
+    "start": "browser-sync start --server --port 8080 --no-notify --files index.html app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "reinstall": "rm -rf node_modules && npm install"
   },
@@ -16,7 +16,8 @@
   "author": "Process <contact@process.studio> (https://process.studio)",
   "license": "AGPL-3.0",
   "dependencies": {
-    "three": "^0.89.0"
+    "dat.gui": "^0.7.1",
+    "three": "^0.90.0"
   },
   "devDependencies": {
     "browser-sync": "^2.23.5"

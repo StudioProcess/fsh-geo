@@ -1,30 +1,31 @@
 import noise from './noise.js';
 import * as tilesaver from './tilesaver.js';
-
-console.log(noise);
+import * as gui from './gui.js';
 
 const W = 1280;
 const H = 720;
 const seed_geo = 0;
 const seed_perf = 1;
 
-let renderer, scene, camera;
+export let renderer, scene, camera;
 let shaders;
 let controls; // eslint-disable-line no-unused-vars
-let mesh_wireframe, mesh_gradient;
+export let mesh_wireframe, mesh_gradient;
+export let mat_gradient, mat_wireframe;
 
-
-let config = {
-  EXPORT_TILES: 2,
+export let config = {
+  EXPORT_TILES: 4,
 };
+
 
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
   length: 25, // along longitudinal axis
   width: 5, // along transversal axis
-  length_segments: 500,
-  width_segments: 100,
+  length_segments: 25,
+  width_segments: 5,
+  
   noise_heading: {
     seed: 111,
     freq: 0.1,
@@ -42,6 +43,15 @@ let banner_options = {
   },
 };
 
+
+export let params = {
+  banner_options,
+  shading: {
+    emissiveIntesity: 0.5,
+    diffuseIntesity: 0.7,
+    flatShading: true,
+  }
+};
 
 (async function main() {
   await setup(); // set up scene
@@ -73,7 +83,7 @@ async function setup() {
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
   
-  let gradient_mat = new THREE.RawShaderMaterial({
+  mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
       // a: { value: new THREE.Color(0xff0000) },
       // b: { value: new THREE.Color(0x00ff00) },
@@ -84,31 +94,46 @@ async function setup() {
       c: { value: new THREE.Color(0x701655) },
       d: { value: new THREE.Color(0x8781bd) },
       // steps: { value: new THREE.Vector2(100, 100) },
-      emissiveIntesity: { value: 1.0 },
-      diffuseIntesity: { value: 0.5 },
-      flatShading: { value: true },
+      emissiveIntesity: { value: params.shading.emissiveIntesity },
+      diffuseIntesity: { value: params.shading.diffuseIntesity },
+      flatShading: { value: params.shading.flatShading },
     },
     vertexShader: shaders['main.vert'],
     fragmentShader: shaders['main.frag'],
     side: THREE.DoubleSide,
   });
   
-
+  
   let banner = createBannerGeo(banner_options);
   // displaceGeo(banner.plane);
   // perforateGeo(banner.plane);
-  let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
-  mesh_wireframe = new THREE.Mesh(banner.plane, plane_mat);
-  mesh_gradient = new THREE.Mesh(banner.plane, gradient_mat);
+  mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
+  mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
+  mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
+
   // scene.add(mesh_wireframe);
   scene.add(mesh_gradient);
   scene.add(line);
-  
-  // scene.add(createNormalsObj(banner.plane)); 
+
+  scene.add( createNormalsObj(banner.plane, 1.0) ); 
   // scene.add( createFractalNoiseObj({seed: 1, freq: 0.1, amp: 5, octaves: 5, persistence: 0.5}, 20, 400) );
+  
+  // add cylinder for testing normals
+  // let cylinder = new THREE.CylinderBufferGeometry( 1, 1, 1, 20, 20 );
+  // let mesh_cylinder = new THREE.Mesh(cylinder, wireframe_mat);
+  // scene.add( mesh_cylinder );
+  // scene.add( createNormalsObj(cylinder) );
+  
+  // add sphere for testing shading
+  let sphere = new THREE.SphereBufferGeometry( 2 );
+  let mesh_sphere = new THREE.Mesh(sphere, mat_gradient);
+  scene.add( mesh_sphere );
+  scene.add( createNormalsObj(sphere, 0.5) );
+  
+  gui.create();
 }
 
 function createDistortedCylinderObj() { // eslint-disable-line
