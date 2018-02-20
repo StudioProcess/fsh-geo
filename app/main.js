@@ -1,6 +1,7 @@
 import noise from './noise.js';
 import * as tilesaver from './tilesaver.js';
 import * as gui from './gui.js';
+import * as util from './util.js';
 
 const W = 1280;
 const H = 720;
@@ -51,6 +52,11 @@ export let params = {
     emissiveIntesity: 0.5,
     diffuseIntesity: 0.7,
     flatShading: true,
+    scaleX: 1,
+    scaleY: 1,
+    rotate: 0,
+    translateX: 0,
+    translateY: 0,
   },
   show_normals: false,
   show_wireframe: false,
@@ -67,7 +73,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   renderer.render( scene, camera );
 }
 
- 
+
 async function setup() {
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
   renderer = new THREE.WebGLRenderer({
@@ -106,6 +112,7 @@ async function setup() {
       emissiveIntesity: { value: params.shading.emissiveIntesity },
       diffuseIntesity: { value: params.shading.diffuseIntesity },
       flatShading: { value: params.shading.flatShading },
+      uvTransform: { value: getUVMatrix() }
     },
     vertexShader: shaders['main.vert'],
     fragmentShader: shaders['main.frag'],
@@ -408,4 +415,17 @@ async function loadShaders(folder, ...urls) {
       return acc;
     }, {});
   });
+}
+
+
+function getUVMatrix() {
+  return util.makeSRTMatrix3(
+    1/params.shading.scaleX, 1/params.shading.scaleY, 
+    params.shading.rotate/360*Math.PI*2,
+    -params.shading.translateX, -params.shading.translateY
+  );
+}
+
+export function updateUVMatrix() {
+  mat_gradient.uniforms.uvTransform.value = getUVMatrix();
 }

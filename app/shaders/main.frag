@@ -11,6 +11,7 @@ uniform vec3 colors[8];
 uniform bool flatShading;
 uniform float emissiveIntesity;
 uniform float diffuseIntesity;
+uniform mat3 uvTransform;
 
 varying vec3 v_color;
 varying vec2 v_uv;
@@ -49,9 +50,16 @@ vec3 bilerp(vec3 c0, vec3 c1, vec3 c2, vec3 c3, vec2 uv) {
   );
 }
 
-
 vec2 resample(vec2 val, vec2 steps) {
   return floor(val * steps) / steps;
+}
+
+vec2 repeat(vec2 uv) {
+  return fract(uv);
+}
+
+vec2 mirrored_repeat(vec2 uv) {
+  return 1.0 - abs(abs(mod(uv, 2.0)) - 1.0);
 }
 
 
@@ -68,7 +76,9 @@ void main() {
   }
   
   /* Surface color */
-  vec3 col = bilerp(colors, v_uv);
+  vec2 transformed_uv = ( uvTransform * vec3(v_uv, 1.0) ).st;
+  transformed_uv = mirrored_repeat(transformed_uv);
+  vec3 col = bilerp(colors, transformed_uv);
   
   /* Emissive Light */
   vec3 emissive = col * emissiveIntesity;
