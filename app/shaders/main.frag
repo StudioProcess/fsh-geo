@@ -7,7 +7,7 @@ uniform mat4 viewMatrix; // world -> eye space
 uniform vec3 cameraPosition;
 uniform float toneMappingExposure;
 
-uniform vec3 colors[4];
+uniform vec3 colors[8];
 uniform bool flatShading;
 uniform float emissiveIntesity;
 uniform float diffuseIntesity;
@@ -27,10 +27,24 @@ varying vec3 v_position; // position in eye space
 
 
 /* Bilinear interpolation between four colors */
-vec3 bilin(vec3 c[4], vec2 uv) {
+vec3 bilerp(vec3 c[4], vec2 uv) {
   return mix(
     mix(c[0], c[1], uv.s),
     mix(c[2], c[3], uv.s),
+    uv.t
+  );
+}
+vec3 bilerp(vec3 c[8], vec2 uv) {
+  return mix(
+    mix(c[0], c[1], uv.s),
+    mix(c[2], c[3], uv.s),
+    uv.t
+  );
+}
+vec3 bilerp(vec3 c0, vec3 c1, vec3 c2, vec3 c3, vec2 uv) {
+  return mix(
+    mix(c0, c1, uv.s),
+    mix(c2, c3, uv.s),
     uv.t
   );
 }
@@ -54,7 +68,7 @@ void main() {
   }
   
   /* Surface color */
-  vec3 col = bilin(colors, v_uv);
+  vec3 col = bilerp(colors, v_uv);
   
   /* Emissive Light */
   vec3 emissive = col * emissiveIntesity;
