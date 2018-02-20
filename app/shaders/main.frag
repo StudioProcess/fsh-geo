@@ -7,10 +7,7 @@ uniform mat4 viewMatrix; // world -> eye space
 uniform vec3 cameraPosition;
 uniform float toneMappingExposure;
 
-uniform vec3 a;
-uniform vec3 b;
-uniform vec3 c;
-uniform vec3 d;
+uniform vec3 colors[4];
 uniform bool flatShading;
 uniform float emissiveIntesity;
 uniform float diffuseIntesity;
@@ -28,19 +25,24 @@ varying vec3 v_position; // position in eye space
 #define LOG2 1.442695
 #define EPSILON 1e-6
 
-vec3 bilin(vec2 uv) {
+
+/* Bilinear interpolation between four colors */
+vec3 bilin(vec3 c[4], vec2 uv) {
   return mix(
-    mix(c, d, uv.s),
-    mix(a, b, uv.s),
+    mix(c[2], c[3], uv.s),
+    mix(c[0], c[1], uv.s),
     uv.t
   );
 }
+
 
 vec2 resample(vec2 val, vec2 steps) {
   return floor(val * steps) / steps;
 }
 
+
 void main() {
+  
   /* Process normal for flat shading */
   vec3 normal;
   if (flatShading) {
@@ -52,7 +54,7 @@ void main() {
   }
   
   /* Surface color */
-  vec3 col = bilin(v_uv);
+  vec3 col = bilin(colors, v_uv);
   
   /* Emissive Light */
   vec3 emissive = col * emissiveIntesity;
@@ -73,4 +75,5 @@ void main() {
   /* Total outgoing light */
   vec3 outgoingLight =  emissive + diffuse;
   gl_FragColor = vec4(outgoingLight, 1.0);
+  
 }

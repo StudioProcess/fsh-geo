@@ -89,15 +89,18 @@ async function setup() {
   
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
-      // a: { value: new THREE.Color(0xff0000) },
-      // b: { value: new THREE.Color(0x00ff00) },
-      // c: { value: new THREE.Color(0x0000ff) },
-      // d: { value: new THREE.Color(0xffff00) },
-      a: { value: new THREE.Color(0xed1c24) },
-      b: { value: new THREE.Color(0xc83e81) },
-      c: { value: new THREE.Color(0x701655) },
-      d: { value: new THREE.Color(0x8781bd) },
-      // steps: { value: new THREE.Vector2(100, 100) },
+      colors: { value: [
+        new THREE.Color('#f00'), 
+        new THREE.Color('#0f0'), 
+        new THREE.Color('#00f'), 
+        new THREE.Color('#ff0'),
+      ]},
+      // colors: { value: [
+      //   new THREE.Color(0xed1c24), 
+      //   new THREE.Color(0xc83e81), 
+      //   new THREE.Color(0x701655), 
+      //   new THREE.Color(0x8781bd),
+      // ]},
       emissiveIntesity: { value: params.shading.emissiveIntesity },
       diffuseIntesity: { value: params.shading.diffuseIntesity },
       flatShading: { value: params.shading.flatShading },
