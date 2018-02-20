@@ -23,8 +23,8 @@ export let config = {
 let banner_options = {
   length: 25, // along longitudinal axis
   width: 5, // along transversal axis
-  length_segments: 25,
-  width_segments: 5,
+  length_segments: 250,
+  width_segments: 50,
   
   noise_heading: {
     seed: 111,
@@ -105,19 +105,21 @@ async function setup() {
   
   
   let banner = createBannerGeo(banner_options);
-  // displaceGeo(banner.plane);
+  displaceGeo(banner.plane);
   // perforateGeo(banner.plane);
+  banner.plane.computeVertexNormals();
+  
   mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
-
+  
   // scene.add(mesh_wireframe);
   scene.add(mesh_gradient);
   scene.add(line);
-
+  
   scene.add( createNormalsObj(banner.plane, 1.0) ); 
   // scene.add( createFractalNoiseObj({seed: 1, freq: 0.1, amp: 5, octaves: 5, persistence: 0.5}, 20, 400) );
   
@@ -128,10 +130,10 @@ async function setup() {
   // scene.add( createNormalsObj(cylinder) );
   
   // add sphere for testing shading
-  let sphere = new THREE.SphereBufferGeometry( 2 );
-  let mesh_sphere = new THREE.Mesh(sphere, mat_gradient);
-  scene.add( mesh_sphere );
-  scene.add( createNormalsObj(sphere, 0.5) );
+  // let sphere = new THREE.SphereBufferGeometry( 2 );
+  // let mesh_sphere = new THREE.Mesh(sphere, mat_gradient);
+  // scene.add( mesh_sphere );
+  // scene.add( createNormalsObj(sphere, 0.5) );
   
   gui.create();
 }
