@@ -10,8 +10,9 @@ const seed_perf = 1;
 export let renderer, scene, camera;
 let shaders;
 let controls; // eslint-disable-line no-unused-vars
-export let mesh_wireframe, mesh_gradient;
+export let mesh_gradient, mesh_wireframe;
 export let mat_gradient, mat_wireframe;
+export let obj_normals, obj_path;
 
 export let config = {
   EXPORT_TILES: 4,
@@ -50,7 +51,10 @@ export let params = {
     emissiveIntesity: 0.5,
     diffuseIntesity: 0.7,
     flatShading: true,
-  }
+  },
+  show_normals: false,
+  show_wireframe: false,
+  show_path: false,
 };
 
 (async function main() {
@@ -111,16 +115,20 @@ async function setup() {
   
   mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
+  mesh_wireframe.visible = params.show_wireframe;
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
-  let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
-  let line = new THREE.Line(banner.path, line_mat);
-  
-  
-  // scene.add(mesh_wireframe);
   scene.add(mesh_gradient);
-  scene.add(line);
+  scene.add(mesh_wireframe);
+
+  let mat_path = new THREE.LineBasicMaterial({ color: 0xffffff });
+  obj_path = new THREE.Line(banner.path, mat_path);
+  obj_path.visible = params.show_path;
+  scene.add(obj_path);
   
-  scene.add( createNormalsObj(banner.plane, 1.0) ); 
+  obj_normals = createNormalsObj(banner.plane, 0.33);
+  obj_normals.visible = params.show_normals;
+  scene.add(obj_normals);
+  
   // scene.add( createFractalNoiseObj({seed: 1, freq: 0.1, amp: 5, octaves: 5, persistence: 0.5}, 20, 400) );
   
   // add cylinder for testing normals
@@ -317,7 +325,7 @@ function array(length = 0) {
 
 
 // For testing getfractalnoise()
-function createFractalNoiseObj(options, width=1, segments=10) {
+function createFractalNoiseObj(options, width=1, segments=10) { // eslint-disable-line no-unused-vars
   let x = array(segments+1).map(i => width/segments * i);
   let y = x.map(x => getfractalnoise(options, x));
   
