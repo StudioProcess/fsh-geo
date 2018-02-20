@@ -28,37 +28,34 @@ let banner_options = {
   noise_heading: {
     seed: 111,
     freq: 0.1,
-    amp: 1
+    amp: 0.1
   },
   noise_pitch: {
     seed: 222,
     freq: 0.2,
-    amp: 0.5
+    amp: 0.1
   },
   noise_roll: {
     seed: 333,
     freq: 0.2,
-    amp: 0.5
+    amp: 0.1
   },
 };
 
 
-main();
-
-
-async function main() {
+(async function main() {
   await setup(); // set up scene
   loop(); // start game loop
-}
+})();
 
 function loop(time) { // eslint-disable-line no-unused-vars
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
 }
 
-
+ 
 async function setup() {
-  shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag');
+  shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -86,18 +83,19 @@ async function setup() {
       b: { value: new THREE.Color(0xc83e81) },
       c: { value: new THREE.Color(0x701655) },
       d: { value: new THREE.Color(0x8781bd) },
-      c1: { value: new THREE.Vector2(0, 0) },
-      c2: { value: new THREE.Vector2(0, 0) },
-      steps: { value: new THREE.Vector2(100, 100) }
+      // steps: { value: new THREE.Vector2(100, 100) },
+      emissiveIntesity: { value: 1.0 },
+      diffuseIntesity: { value: 0.5 },
+      flatShading: { value: true },
     },
-    vertexShader: shaders['test.vert'],
-    fragmentShader: shaders['test.frag'],
+    vertexShader: shaders['main.vert'],
+    fragmentShader: shaders['main.frag'],
     side: THREE.DoubleSide,
   });
   
 
   let banner = createBannerGeo(banner_options);
-  displaceGeo(banner.plane);
+  // displaceGeo(banner.plane);
   // perforateGeo(banner.plane);
   let plane_mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, plane_mat);
@@ -105,7 +103,7 @@ async function setup() {
   let line_mat = new THREE.LineBasicMaterial({ color: 0xffffff });
   let line = new THREE.Line(banner.path, line_mat);
   
-  scene.add(mesh_wireframe);
+  // scene.add(mesh_wireframe);
   scene.add(mesh_gradient);
   scene.add(line);
   
