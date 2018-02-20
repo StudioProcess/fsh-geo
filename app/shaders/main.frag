@@ -29,8 +29,8 @@ varying vec3 v_position; // position in eye space
 /* Bilinear interpolation between four colors */
 vec3 bilin(vec3 c[4], vec2 uv) {
   return mix(
-    mix(c[2], c[3], uv.s),
     mix(c[0], c[1], uv.s),
+    mix(c[2], c[3], uv.s),
     uv.t
   );
 }
