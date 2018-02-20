@@ -1,4 +1,5 @@
 import noise from './noise.js';
+import * as tilesaver from './tilesaver.js';
 
 console.log(noise);
 
@@ -11,6 +12,11 @@ let renderer, scene, camera;
 let shaders;
 let controls; // eslint-disable-line no-unused-vars
 let mesh_wireframe, mesh_gradient;
+
+
+let config = {
+  EXPORT_TILES: 2,
+};
 
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
@@ -65,6 +71,7 @@ async function setup() {
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   camera.position.z = 16;
+  tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
@@ -309,6 +316,10 @@ document.addEventListener("keydown", e => {
   
   else if (e.key == 'o') {
     exportOBJ(mesh_wireframe);
+  }
+  
+  else if (e.key == 'e') {
+    tilesaver.save().then(f => console.log(`Saved to: ${f}`));
   }
 });
 
