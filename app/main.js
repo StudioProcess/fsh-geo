@@ -2,23 +2,23 @@ import noise from './noise.js';
 import * as tilesaver from './tilesaver.js';
 import * as gui from './gui.js';
 import * as util from './util.js';
-
-const W = 1280;
-const H = 800;
+import { settings } from './settings.js';
 
 export let renderer, scene, camera;
 let shaders;
-let controls; // eslint-disable-line no-unused-vars
+export let controls; // eslint-disable-line no-unused-vars
 export let mesh_gradient, mesh_wireframe;
 export let mat_gradient, mat_wireframe;
 export let obj_normals, obj_path;
 export let obj_axes;
 export let banner;
 
+
 export let config = {
+  W: 1280,
+  H: 800,
   EXPORT_TILES: 4,
 };
-
 
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
@@ -32,7 +32,6 @@ let banner_options = {
   noise_roll: { seed: 333, freq: 0.2, amp: 0.1, octaves: 1, persistence: 0.5 },
   noise_displacement: { seed: 0, freq: 0.37, amp: 0.5, octaves: 4, persistence: 0.3 },
 };
-
 
 export let params = {
   bgColor: '#fff',
@@ -58,6 +57,8 @@ export let params = {
   autoGenerate: true,
 };
 
+
+
 (async function main() {
   await setup(); // set up scene
   loop(); // start game loop
@@ -70,20 +71,23 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
 
 async function setup() {
+  util.loadSettings(settings);
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
   });
-  renderer.setSize( W, H );
+  renderer.setSize( config.W, config.H );
   renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
   setBackgroundColor(params.bgColor);
   
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
+  camera = new THREE.PerspectiveCamera( 75, config.W / config.H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls.dampingFactor = 0.1;
   camera.position.z = 16;
+  util.loadCameraSettings(settings);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
   // scene.add( createDistortedCylinderObj() );
@@ -373,7 +377,9 @@ document.addEventListener("keydown", e => {
 
 function exportHires() {
   if (params.show_axes) { obj_axes.visible = false; }
-  tilesaver.save().then(f => {
+  let saved = util.saveSettings();
+  console.log(saved);
+  tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
     if (params.show_axes) { obj_axes.visible = true; }
     console.log(`Saved to: ${f}`);
   });
@@ -397,9 +403,6 @@ function saveText(string, filename) {
   saveBlob(blob, filename);
 }
 
-function timestamp() {
-  return new Date().toISOString();
-}
 
 function exportOBJ(mesh) {
   console.log('exporting');
@@ -408,7 +411,7 @@ function exportOBJ(mesh) {
   let txt = exporter.parse(mesh);
   console.log(typeof txt);
   
-  saveText( txt, `obj_${timestamp()}.obj` );
+  saveText( txt, `obj_${util.timestamp()}.obj` );
 }
 
 

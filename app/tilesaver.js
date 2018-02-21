@@ -25,7 +25,7 @@ export function saveCanvas(canvas, filename) {
 }
 
 
-export function save(num_tiles) {
+export function save({ num_tiles, timestamp }) {
   // assume rendering is halted
   
   num_tiles = num_tiles !== undefined ? num_tiles : NUM_TILES;
@@ -40,7 +40,7 @@ export function save(num_tiles) {
     return;
   }
   
-  let timestamp  = new Date().toISOString();
+  if (!timestamp) timestamp  = new Date().toISOString();
   let tileWidth  = renderer.domElement.width;
   let tileHeight = renderer.domElement.height;
   let fullWidth  = tileWidth  * num_tiles;
