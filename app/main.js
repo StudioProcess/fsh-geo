@@ -38,6 +38,7 @@ export let params = {
   bgColor: '#fff',
   banner_options,
   shading: {
+    colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd'],
     emissiveIntesity: 0.0,
     diffuseIntesity: 1.0,
     lambertStrength: 0.0,
@@ -90,21 +91,9 @@ async function setup() {
   obj_axes.visible = params.show_axes;
   scene.add( obj_axes );
   
-  // let c = [
-  //   new THREE.Color('#f00'),
-  //   new THREE.Color('#0f0'),
-  //   new THREE.Color('#ff0'),
-  //   new THREE.Color('#00f')
-  // ];
-  let c = [
-    new THREE.Color(0xed1c24),
-    new THREE.Color(0xc83e81),
-    new THREE.Color(0x701655),
-    new THREE.Color(0x8781bd),
-  ];
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
-      colors: { value: [ c[0], c[1], c[2], c[3], c[2], c[3], c[0], c[1] ]},
+      colors: { value: getColorsUniform(params.shading.colors) },
       emissiveIntesity: { value: params.shading.emissiveIntesity },
       diffuseIntesity: { value: params.shading.diffuseIntesity },
       lambertStrength: { value: params.shading.lambertStrength },
@@ -156,6 +145,11 @@ async function setup() {
   gui.create();
 }
 
+export function getColorsUniform(inputColors) {
+  let seq = [0, 1, 2, 3, 2, 3, 0, 1];
+  return seq.map( idx => new THREE.Color(inputColors[idx]) );
+}
+
 function generateBanner() {
   banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane, banner_options.noise_displacement);
@@ -196,7 +190,6 @@ function perforateGeo(geo, thresh = 0.3, noiseOptions = {seed:1, freq:0.25}) {
   let pos = geo.attributes.position.array;
   let idx = geo.index.array.slice(0);
   let idx2 = [];
-  noise.seed(seed_perf);
   for (let i = 0; i<pos.length/3; i++) {
     let p = new THREE.Vector3(pos[i*3+0], pos[i*3+1], pos[i*3+2]); // vertex position
     let n = getfractalnoise(noiseOptions, p.x, p.y, p.z);

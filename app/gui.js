@@ -1,5 +1,5 @@
 /* globals dat */
-import { params, mat_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor } from './main.js';
+import { params, mat_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
@@ -22,6 +22,11 @@ export function create() {
   
   
   let shading = gui.addFolder('Shading');
+  shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);
+  shading.addColor(params.shading.colors, 1).name('color_1').onChange(setColors);
+  shading.addColor(params.shading.colors, 2).name('color_2').onChange(setColors);
+  shading.addColor(params.shading.colors, 3).name('color_3').onChange(setColors);
+  
   shading.add(params.shading, 'emissiveIntesity', 0, 2, .01).onChange(a => {
     mat_gradient.uniforms.emissiveIntesity.value = a;
   });
@@ -71,4 +76,8 @@ function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjNam
   folder.add(noiseObj, 'amp', 0.01, 2, 0.01).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'octaves', 1, 4, 1).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'persistence', 0, 1, 0.01).onFinishChange(autoGenerate);
+}
+
+function setColors() {
+  mat_gradient.uniforms.colors.value = getColorsUniform(params.shading.colors);
 }
