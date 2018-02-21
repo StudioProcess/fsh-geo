@@ -10,6 +10,12 @@ export function create() {
   gui.add(params.shading, 'diffuseIntesity', 0, 2, .01).onChange(a => {
     mat_gradient.uniforms.diffuseIntesity.value = a;
   });
+  gui.add(params.shading, 'lambertStrength', 0, 1, .01).onChange(a => {
+    mat_gradient.uniforms.lambertStrength.value = a;
+  });
+  gui.add(params.shading, 'lambertHarshness', 0, 10, .01).onChange(a => {
+    mat_gradient.uniforms.lambertHarshness.value = a;
+  });
   gui.add(params.shading, 'flatShading').onChange(a => {
     mat_gradient.uniforms.flatShading.value = a;
   });

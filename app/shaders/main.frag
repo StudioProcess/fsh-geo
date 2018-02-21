@@ -11,6 +11,8 @@ uniform vec3 colors[8];
 uniform bool flatShading;
 uniform float emissiveIntesity;
 uniform float diffuseIntesity;
+uniform float lambertStrength;
+uniform float lambertHarshness;
 uniform mat3 uvTransform;
 
 varying vec3 v_color;
@@ -63,6 +65,24 @@ vec2 mirrored_repeat(vec2 uv) {
 }
 
 
+void pick_colors(inout vec3 c[4], inout vec2 uv) {
+  #define W 4
+  // 4 5 6 7
+  // 0 1 2 3
+  float s = uv.s * float(W-1);
+  for (int i=0; i<W-1; i++) {
+    if ( s >= float(i) && s <= float(i+1) ) {
+      c[0] = colors[i];
+      c[1] = colors[i+1];
+      c[2] = colors[i+W];
+      c[3] = colors[i+W+1];
+      uv.s = fract(s);
+      break;
+    }
+  }
+}
+
+
 void main() {
   
   /* Process normal for flat shading */
@@ -78,23 +98,30 @@ void main() {
   /* Surface color */
   vec2 transformed_uv = ( uvTransform * vec3(v_uv, 1.0) ).st;
   transformed_uv = mirrored_repeat(transformed_uv);
-  vec3 col = bilerp(colors, transformed_uv);
+  
+  // vec3 col = bilerp(colors, transformed_uv);
+  vec3 c[4];
+  pick_colors(c, transformed_uv);
+  vec3 col = bilerp( c, transformed_uv );
   
   /* Emissive Light */
   vec3 emissive = col * emissiveIntesity;
   
-  /* Diffuse Reflection Lambertian */
-  // float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
-  // geometry.position = - vViewPosition;
-  // geometry.normal = normal;
-  // geometry.viewDir = normalize( vViewPosition );
+  /* Diffuse Reflection (Lambertian) */
   vec3 toCamera = vec3(0.0, 0.0, 1.0); // ... direction to camera (pos. z-axis)
-  float dotNL = clamp( dot( normal, toCamera ), 0.0, 1.0 );
-  vec3 diffuse = col * dotNL * diffuseIntesity;
+  // float dotNL = clamp( dot( normal, toCamera ), 0.0, 1.0 );
   
-  // Diffuse Reflection (Lambertian)
-  // vec3 diff = col * dot(v_normal, toCamera) * lightIntensity;
-  // diff = clamp(diff, vec3(0.0), vec3(1.0));
+  float dotNL = dot( normal, toCamera );
+  float dotHL = dotNL * 0.5 + 0.5; // https://developer.valvesoftware.com/wiki/Half_Lambert
+  // dotNL = mix(dotHL, pow(dotNL, 4.0), lambertMix);
+  
+  float cut = lambertHarshness;
+  float dotCut = dotHL * (cut+1.0) - cut;
+  dotNL = mix(dotHL, pow(dotCut, 4.0), lambertStrength);
+  
+
+  
+  vec3 diffuse = col * dotNL * diffuseIntesity;
   
   /* Total outgoing light */
   vec3 outgoingLight =  emissive + diffuse;

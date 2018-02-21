@@ -49,8 +49,10 @@ let banner_options = {
 export let params = {
   banner_options,
   shading: {
-    emissiveIntesity: 0.5,
-    diffuseIntesity: 0.7,
+    emissiveIntesity: 0.0,
+    diffuseIntesity: 1.0,
+    lambertStrength: 0.0,
+    lambertHarshness: 0.0,
     flatShading: true,
     scaleX: 1,
     scaleY: 1,
@@ -93,24 +95,25 @@ async function setup() {
   // scene.add( createDistortedCylinderObj() );
   scene.add( createAxesObj(10) );
   
+  // let c = [
+  //   new THREE.Color('#f00'),
+  //   new THREE.Color('#0f0'),
+  //   new THREE.Color('#ff0'),
+  //   new THREE.Color('#00f')
+  // ];
   let c = [
-    new THREE.Color('#f00'),
-    new THREE.Color('#0f0'),
-    new THREE.Color('#ff0'),
-    new THREE.Color('#00f')
+    new THREE.Color(0xed1c24),
+    new THREE.Color(0xc83e81),
+    new THREE.Color(0x701655),
+    new THREE.Color(0x8781bd),
   ];
-  
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
       colors: { value: [ c[0], c[1], c[2], c[3], c[2], c[3], c[0], c[1] ]},
-      // colors: { value: [
-      //   new THREE.Color(0xed1c24), 
-      //   new THREE.Color(0xc83e81), 
-      //   new THREE.Color(0x701655), 
-      //   new THREE.Color(0x8781bd),
-      // ]},
       emissiveIntesity: { value: params.shading.emissiveIntesity },
       diffuseIntesity: { value: params.shading.diffuseIntesity },
+      lambertStrength: { value: params.shading.lambertStrength },
+      lambertHarshness: { value: params.shading.lambertHarshness },
       flatShading: { value: params.shading.flatShading },
       uvTransform: { value: getUVMatrix() }
     },
