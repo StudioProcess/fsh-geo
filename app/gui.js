@@ -1,9 +1,11 @@
 /* globals dat */
-import { params, mat_gradient, mesh_wireframe, obj_normals, obj_path, updateUVMatrix} from './main.js';
+import { params, mat_gradient, mesh_wireframe, obj_normals, obj_path, updateUVMatrix, setBackgroundColor } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
-  
+  gui.addColor(params, 'bgColor').onChange(a => {
+    setBackgroundColor(a);
+  });
   gui.add(params.shading, 'emissiveIntesity', 0, 2, .01).onChange(a => {
     mat_gradient.uniforms.emissiveIntesity.value = a;
   });

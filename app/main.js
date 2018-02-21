@@ -4,7 +4,7 @@ import * as gui from './gui.js';
 import * as util from './util.js';
 
 const W = 1280;
-const H = 720;
+const H = 800;
 const seed_geo = 0;
 const seed_perf = 1;
 
@@ -47,6 +47,7 @@ let banner_options = {
 
 
 export let params = {
+  bgColor: '#fff',
   banner_options,
   shading: {
     emissiveIntesity: 0.0,
@@ -85,6 +86,7 @@ async function setup() {
   renderer.setSize( W, H );
   renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
+  setBackgroundColor(params.bgColor);
   
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
@@ -431,4 +433,9 @@ function getUVMatrix() {
 
 export function updateUVMatrix() {
   mat_gradient.uniforms.uvTransform.value = getUVMatrix();
+}
+
+
+export function setBackgroundColor(col) {
+  document.querySelector('canvas').style.backgroundColor = col;
 }
