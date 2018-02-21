@@ -5,8 +5,6 @@ import * as util from './util.js';
 
 const W = 1280;
 const H = 800;
-const seed_geo = 0;
-const seed_perf = 1;
 
 export let renderer, scene, camera;
 let shaders;
@@ -15,6 +13,7 @@ export let mesh_gradient, mesh_wireframe;
 export let mat_gradient, mat_wireframe;
 export let obj_normals, obj_path;
 export let obj_axes;
+export let banner;
 
 export let config = {
   EXPORT_TILES: 4,
@@ -25,25 +24,13 @@ export let config = {
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 let banner_options = {
   length: 25, // along longitudinal axis
-  width: 5, // along transversal axis
-  length_segments: 250,
-  width_segments: 50,
-  
-  noise_heading: {
-    seed: 111,
-    freq: 0.1,
-    amp: 0.1
-  },
-  noise_pitch: {
-    seed: 222,
-    freq: 0.2,
-    amp: 0.1
-  },
-  noise_roll: {
-    seed: 333,
-    freq: 0.2,
-    amp: 0.1
-  },
+  height: 5, // along transversal axis
+  segment_detail: 10,
+  segment_proportion: 2,
+  noise_heading: { seed: 111, freq: 0.1, amp: 0.1, octaves: 1, persistence: 0.5 },
+  noise_pitch: { seed: 222, freq: 0.2, amp: 0.1, octaves: 1, persistence: 0.5 },
+  noise_roll: { seed: 333, freq: 0.2, amp: 0.1, octaves: 1, persistence: 0.5 },
+  noise_displacement: { seed: 0, freq: 0.37, amp: 0.5, octaves: 4, persistence: 0.3 },
 };
 
 
@@ -66,6 +53,8 @@ export let params = {
   show_wireframe: false,
   show_path: false,
   show_axes: true,
+  generate: generateBanner,
+  autoGenerate: true,
 };
 
 (async function main() {
@@ -130,7 +119,7 @@ async function setup() {
   
   
   let banner = createBannerGeo(banner_options);
-  displaceGeo(banner.plane);
+  displaceGeo(banner.plane, banner_options.noise_displacement);
   // perforateGeo(banner.plane);
   banner.plane.computeVertexNormals();
   
@@ -140,7 +129,7 @@ async function setup() {
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
   scene.add(mesh_gradient);
   scene.add(mesh_wireframe);
-
+  
   let mat_path = new THREE.LineBasicMaterial({ color: 0xffffff });
   obj_path = new THREE.Line(banner.path, mat_path);
   obj_path.visible = params.show_path;
@@ -167,6 +156,16 @@ async function setup() {
   gui.create();
 }
 
+function generateBanner() {
+  banner = createBannerGeo(banner_options);
+  displaceGeo(banner.plane, banner_options.noise_displacement);
+  // perforateGeo(banner.plane);
+  banner.plane.computeVertexNormals();
+  if (mesh_gradient) mesh_gradient.geometry = banner.plane;
+  if (mesh_wireframe) mesh_wireframe.geometry = banner.plane;
+  if (obj_path) obj_path.geometry = banner.path;
+}
+
 function createDistortedCylinderObj() { // eslint-disable-line
   let geo = new THREE.CylinderBufferGeometry( 100, 100, 100, 200, 100, true );
   console.log(geo);
@@ -177,10 +176,9 @@ function createDistortedCylinderObj() { // eslint-disable-line
   return mesh;
 }
 
-function displaceGeo( geo, noiseOptions = {freq:0.66, amp:0.5, octaves:2 } ) {
+function displaceGeo( geo, noiseOptions = { seed:0, freq:0.66, amp:0.5, octaves:2 } ) {
   let pos = geo.attributes.position.array;
   let nrm = geo.attributes.normal.array;
-  noise.seed(seed_geo);
   for (let i = 0; i<pos.length/3; i++) {
     let p = new THREE.Vector3(pos[i*3+0], pos[i*3+1], pos[i*3+2]); // vertex position
     let n = new THREE.Vector3(nrm[i*3+0], nrm[i*3+1], nrm[i*3+2]); // vertex normal
@@ -194,7 +192,7 @@ function displaceGeo( geo, noiseOptions = {freq:0.66, amp:0.5, octaves:2 } ) {
 }
 
 
-function perforateGeo(geo, thresh = 0.3, noiseOptions = {freq:0.25}) {
+function perforateGeo(geo, thresh = 0.3, noiseOptions = {seed:1, freq:0.25}) {
   let pos = geo.attributes.position.array;
   let idx = geo.index.array.slice(0);
   let idx2 = [];
@@ -263,7 +261,9 @@ function createNormalsObj(inputGeo, length = 0.1) { // eslint-disable-line no-un
 // Aircraft principal axes:
 // yaw/heading (y-axis, normal), pitch (z-axis, transversal), roll (x-axis, longitudinal)
 function createBannerGeo(options) {
-  let plane = new THREE.PlaneBufferGeometry(options.length, options.width, options.length_segments, options.width_segments);
+  let length_segments = Math.floor(options.length * options.segment_detail);
+  let height_segments = Math.floor(options.height * options.segment_detail * options.segment_proportion);
+  let plane = new THREE.PlaneBufferGeometry(options.length, options.height, length_segments, height_segments);
   let plane_pos = plane.attributes.position.array;
   let plane_norm = plane.attributes.normal.array;
   // printIndexedVertices(plane);
@@ -271,10 +271,10 @@ function createBannerGeo(options) {
   
   let path = new THREE.Geometry();
   let aircraft = new THREE.Object3D();
-  let speed = options.length / options.length_segments;
+  let speed = options.length / length_segments;
   
   // simulate path along longitudinal axis (x)
-  for (let x=0; x<=options.length_segments; x++) {
+  for (let x=0; x<=length_segments; x++) {
     let apos = aircraft.position;
     let roll = getfractalnoise(options.noise_roll, apos.x, apos.y, apos.z) * Math.PI * 2;
     let heading = getfractalnoise(options.noise_heading, apos.x, apos.y, apos.z) * Math.PI * 2;
@@ -283,14 +283,14 @@ function createBannerGeo(options) {
     
     path.vertices.push( aircraft.position.clone() );
     // set respective column of plane (along z axis)
-    let seg = options.width / options.width_segments; // size of one segment
+    let seg = options.height / height_segments; // size of one segment
     let v = new THREE.Vector3(0,0,1).applyEuler(aircraft.rotation); // z-axis unit vector
-    let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.width/2) );
+    let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.height/2) );
     let inc = v.multiplyScalar(seg);
     let norm = new THREE.Vector3(0,1,0).applyEuler(aircraft.rotation); // normal vector
     
-    for (let y=0; y<=options.width_segments; y++) {
-      let idx = (y * (options.length_segments+1) + x) * 3;
+    for (let y=0; y<=height_segments; y++) {
+      let idx = (y * (length_segments+1) + x) * 3;
       plane_pos[idx+0] = pos.x;
       plane_pos[idx+1] = pos.y;
       plane_pos[idx+2] = pos.z;

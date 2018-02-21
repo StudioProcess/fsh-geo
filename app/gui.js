@@ -3,30 +3,10 @@ import { params, mat_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, 
 
 export function create() {
   let gui = new dat.GUI();
+  
   gui.addColor(params, 'bgColor').onChange(a => {
     setBackgroundColor(a);
   });
-  gui.add(params.shading, 'emissiveIntesity', 0, 2, .01).onChange(a => {
-    mat_gradient.uniforms.emissiveIntesity.value = a;
-  });
-  gui.add(params.shading, 'diffuseIntesity', 0, 2, .01).onChange(a => {
-    mat_gradient.uniforms.diffuseIntesity.value = a;
-  });
-  gui.add(params.shading, 'lambertStrength', 0, 1, .01).onChange(a => {
-    mat_gradient.uniforms.lambertStrength.value = a;
-  });
-  gui.add(params.shading, 'lambertHarshness', 0, 10, .01).onChange(a => {
-    mat_gradient.uniforms.lambertHarshness.value = a;
-  });
-  gui.add(params.shading, 'flatShading').onChange(a => {
-    mat_gradient.uniforms.flatShading.value = a;
-  });
-  gui.add(params.shading, 'scaleX', 0.01, 1, .01).onChange(() => updateUVMatrix());
-  gui.add(params.shading, 'scaleY', 0.01, 1, .01).onChange(() => updateUVMatrix());
-  gui.add(params.shading, 'rotate', 0, 180, 1).onChange(() => updateUVMatrix());
-  gui.add(params.shading, 'translateX', 0, 2, .01).onChange(() => updateUVMatrix());
-  gui.add(params.shading, 'translateY', 0, 2, .01).onChange(() => updateUVMatrix());
-  
   gui.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
   });
@@ -39,4 +19,56 @@ export function create() {
   gui.add(params, 'show_path').onChange(a => {
     obj_path.visible = a;
   });
+  
+  
+  let shading = gui.addFolder('Shading');
+  shading.add(params.shading, 'emissiveIntesity', 0, 2, .01).onChange(a => {
+    mat_gradient.uniforms.emissiveIntesity.value = a;
+  });
+  shading.add(params.shading, 'diffuseIntesity', 0, 2, .01).onChange(a => {
+    mat_gradient.uniforms.diffuseIntesity.value = a;
+  });
+  shading.add(params.shading, 'lambertStrength', 0, 1, .01).onChange(a => {
+    mat_gradient.uniforms.lambertStrength.value = a;
+  });
+  shading.add(params.shading, 'lambertHarshness', 0, 10, .01).onChange(a => {
+    mat_gradient.uniforms.lambertHarshness.value = a;
+  });
+  shading.add(params.shading, 'flatShading').onChange(a => {
+    mat_gradient.uniforms.flatShading.value = a;
+  });
+  shading.add(params.shading, 'scaleX', 0.01, 1, .01).onChange(() => updateUVMatrix());
+  shading.add(params.shading, 'scaleY', 0.01, 1, .01).onChange(() => updateUVMatrix());
+  shading.add(params.shading, 'rotate', 0, 180, 1).onChange(() => updateUVMatrix());
+  shading.add(params.shading, 'translateX', 0, 2, .01).onChange(() => updateUVMatrix());
+  shading.add(params.shading, 'translateY', 0, 2, .01).onChange(() => updateUVMatrix());
+  
+  
+  let size = gui.addFolder('Size');
+  size.add(params.banner_options, 'length', 1, 100, .1).onFinishChange(autoGenerate);
+  size.add(params.banner_options, 'height', 1, 25, .1).onFinishChange(autoGenerate);
+  size.add(params.banner_options, 'segment_detail', 1, 20, .1).onFinishChange(autoGenerate);
+  size.add(params.banner_options, 'segment_proportion', 0.2, 5, .01).onFinishChange(autoGenerate);
+  
+  addNoiseFolder(gui, params.banner_options, 'noise_heading', 'Heading');
+  addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
+  addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
+  addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  
+  gui.add(params, 'autoGenerate');
+  gui.add(params, 'generate');
+}
+
+function autoGenerate() {
+  if (params.autoGenerate) params.generate();
+}
+
+function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjName) {
+  let folder = guiOrFolder.addFolder(folderName);
+  let noiseObj = obj[noiseObjName];
+  folder.add(noiseObj, 'seed', 0, 99, 1).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'freq', 0.01, 2, 0.01).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'amp', 0.01, 2, 0.01).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'octaves', 1, 4, 1).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'persistence', 0, 1, 0.01).onFinishChange(autoGenerate);
 }
