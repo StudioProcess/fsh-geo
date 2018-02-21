@@ -14,6 +14,7 @@ let controls; // eslint-disable-line no-unused-vars
 export let mesh_gradient, mesh_wireframe;
 export let mat_gradient, mat_wireframe;
 export let obj_normals, obj_path;
+export let obj_axes;
 
 export let config = {
   EXPORT_TILES: 4,
@@ -64,6 +65,7 @@ export let params = {
   show_normals: false,
   show_wireframe: false,
   show_path: false,
+  show_axes: true,
 };
 
 (async function main() {
@@ -95,7 +97,9 @@ async function setup() {
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
   // scene.add( createDistortedCylinderObj() );
-  scene.add( createAxesObj(10) );
+  obj_axes = createAxesObj(10);
+  obj_axes.visible = params.show_axes;
+  scene.add( obj_axes );
   
   // let c = [
   //   new THREE.Color('#f00'),
@@ -369,10 +373,18 @@ document.addEventListener("keydown", e => {
   }
   
   else if (e.key == 'e') {
-    tilesaver.save().then(f => console.log(`Saved to: ${f}`));
+    exportHires();
   }
 });
 
+
+function exportHires() {
+  if (params.show_axes) { obj_axes.visible = false; }
+  tilesaver.save().then(f => {
+    if (params.show_axes) { obj_axes.visible = true; }
+    console.log(`Saved to: ${f}`);
+  });
+}
 
 function saveURL(url, filename) {
   let link = document.createElement('a');
