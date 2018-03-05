@@ -318,6 +318,7 @@ function getnoise(options, x=0, y=0, z=0) {
 
 // Options: seed, freq, amp, octaves, persistence
 function getfractalnoise(options, x=0, y=0, z=0) {
+  if (options.amp === 0) return 0;
   let defaults = { seed: 0, freq: 1, amp: 1, octaves: 1, persistence: 0.5 };
   options = Object.assign(defaults, options);
   let freq = options.freq;

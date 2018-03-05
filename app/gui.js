@@ -73,7 +73,7 @@ function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjNam
   let noiseObj = obj[noiseObjName];
   folder.add(noiseObj, 'seed', 0, 99, 1).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'freq', 0.01, 2, 0.01).onFinishChange(autoGenerate);
-  folder.add(noiseObj, 'amp', 0.01, 2, 0.01).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'amp', 0, 2, 0.01).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'octaves', 1, 4, 1).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'persistence', 0, 1, 0.01).onFinishChange(autoGenerate);
 }
