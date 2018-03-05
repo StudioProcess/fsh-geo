@@ -72,7 +72,10 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
 
 async function setup() {
-  util.loadSettings(settings);
+  Object.assign(config, settings.config);
+  Object.assign(params, settings.params);
+  banner_options = params.banner_options; // also set this object as well, since it is accessed directly
+  
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -88,7 +91,7 @@ async function setup() {
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.dampingFactor = 0.1;
   camera.position.z = 16;
-  util.loadCameraSettings(settings);
+  util.setCameraState(settings.camera);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
   // scene.add( createDistortedCylinderObj() );
@@ -320,7 +323,7 @@ function getnoise(options, x=0, y=0, z=0) {
 
 // Options: seed, freq, amp, octaves, persistence
 function getfractalnoise(options, x=0, y=0, z=0) {
-  if (options.amp === 0) return 0;
+  // if (options.amp === 0) return 0;
   let defaults = { seed: 0, freq: 1, amp: 1, octaves: 1, persistence: 0.5 };
   options = Object.assign(defaults, options);
   let freq = options.freq;

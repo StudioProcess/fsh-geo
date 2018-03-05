@@ -43,7 +43,7 @@ export function makeSRTMatrix3(sx, sy, r, tx, ty) {
 
 
 
-export function getCameraSettings() {
+export function getCameraState() {
   let camera = main.camera;
   return {
     position: camera.position,
@@ -56,16 +56,22 @@ export function getCameraSettings() {
 }
 
 
-export function setCameraSettings(state) {
+export function setCameraState(state) {
+  if (!state) return;
   let cam = main.camera;
-  let view = state;
+  let view = state.camera ? state.camera : state; // settings object or camera settings object
   cam.position.set(view.position.x, view.position.y, view.position.z);
   cam.rotation.set(view.rotation._x, view.rotation._y, view.rotation._z, view.rotation._order);
-  main.controls.target.set(view.position.x, view.position.y, 0);
-  cam.fov = state.fov;
-  cam.zoom = state.zoom;
-  cam.near = state.near;
-  cam.far = state.far;
+  
+  // Set orbit target
+  let dist = 5; // Assume a default distance from camera to orbit target
+  let dir = new THREE.Vector3(0, 0, -dist).applyEuler(cam.rotation); // view direction
+  main.controls.target = cam.position.clone().add(dir);
+  
+  cam.fov = view.fov;
+  cam.zoom = view.zoom;
+  cam.near = view.near;
+  cam.far = view.far;
 }
 
 export function timestamp() {
@@ -76,9 +82,9 @@ export function saveSettings(_timestamp) {
   if (!_timestamp) { _timestamp = timestamp(); }
   let filename = _timestamp + '.json';
   let state = {
-    version: 3,
+    version: 4,
     timestamp: _timestamp,
-    camera: getCameraSettings(),
+    camera: getCameraState(),
     config: main.config,
     params: main.params,
   };
@@ -89,15 +95,4 @@ export function saveSettings(_timestamp) {
   link.href = URL.createObjectURL(file);
   link.click();
   return { filename, timestamp:_timestamp, data };
-}
-
-export function loadSettings(state) {
-  if (!state) return;
-  if (state.config) { Object.assign(main.config, state.config); }
-  if (state.params) { Object.assign(main.params, state.params); }
-}
-
-export function loadCameraSettings(state) {
-  if (!state || !state.camera) return;
-  setCameraSettings(state.camera);
 }
