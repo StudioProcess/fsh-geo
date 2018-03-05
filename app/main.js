@@ -34,7 +34,7 @@ let banner_options = {
 };
 
 export let params = {
-  bgColor: '#fff',
+  bgColor: '#606060',
   banner_options,
   shading: {
     colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd'],
@@ -49,9 +49,10 @@ export let params = {
     translateX: 0,
     translateY: 0,
   },
-  show_normals: false,
+  show_plane: true,
   show_wireframe: false,
-  show_path: false,
+  show_normals: false,
+  show_path: true,
   show_axes: true,
   generate: generateBanner,
   autoGenerate: true,
@@ -120,6 +121,7 @@ async function setup() {
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
   mesh_wireframe.visible = params.show_wireframe;
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
+  mesh_gradient.visible = params.show_plane;
   scene.add(mesh_gradient);
   scene.add(mesh_wireframe);
   
