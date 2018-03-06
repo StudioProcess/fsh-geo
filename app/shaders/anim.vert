@@ -44,17 +44,22 @@ varying vec2 v_uv;
 varying vec3 v_normal;
 varying vec3 v_position;
 
-vec3 bilin(vec2 uv) {
-  return mix(
-    mix(c, d, uv.s),
-    mix(a, b, uv.s),
-    uv.t
-  );
+
+vec3 calcPosition(vec2 uv) {
+  vec3 path_pos = texture2D( pathData, vec2(uv.s, 0.0) ).xyz;
+  vec3 wing_dir = texture2D( pathData, vec2(uv.s, 1.0) ).xyz;
+  return path_pos + wing_dir * (uv.t-0.5) * bannerHeight;
+}
+
+vec3 calcNormal(vec2 uv) {
+  vec3 p = calcPosition( uv );
+  vec3 px = calcPosition( vec2(uv.s + 0.01, uv.t) );
+  vec3 py = calcPosition( vec2(uv.s, uv.t + 0.01) );
+  return normalize( cross(px - p, py - p) );
 }
 
 void main() {
   // process position 
-  float lol = snoise(vec3(0.0));
   float speed = 0.05; // delta-s per second
   float s = uv.s * 0.5 + mod(speed*time, 0.5);
   float first_s = 0.0 * 0.5 + mod(speed*time, 0.5);
@@ -65,8 +70,18 @@ void main() {
   
   vec3 pos = path_pos - first_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
   
+  float dispFreq = 0.5;
+  float dispAmp = 0.3;
+  int dispOctaves = 4;
+  float dispPersistence = 0.26;
+  // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(vec3(uv * 10.0, 0.0), dispFreq, dispAmp); // displace according to surface location
+  vec3 disp = calcNormal(vec2(s, uv.t)) * noise(pos, dispFreq, dispAmp); // displace according to space position
+  // vec3 disp = normal * fractalnoise(pos, dispFreq, dispAmp, dispOctaves, dispPersistence);
+  pos += disp;
+  
   /* uv pass-thru */
-  v_uv = uv; 
+  v_uv = uv;
+  // v_uv = vec2(s, uv.t); // This uses actual UVs, so colors move with the part of the geometry that's shown
   
   /* normal in eye space */
   v_normal = normalize(normalMatrix * normal);
