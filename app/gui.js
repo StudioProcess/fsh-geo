@@ -1,5 +1,5 @@
 /* globals dat */
-import { params, mat_gradient, mesh_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+import { params, mat_gradient, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
@@ -19,6 +19,12 @@ export function create() {
   gui.add(params, 'show_path').onChange(a => {
     obj_path.visible = a;
   });
+  gui.add(params, 'show_anim').onChange(a => {
+    mesh_anim.visible = a;
+  });
+  // gui.add(params, 'show_anim_wireframe').onChange(a => {
+  //   mesh_anim_wireframe.visible = a;
+  // });
   gui.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
   });

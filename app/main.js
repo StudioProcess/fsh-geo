@@ -7,8 +7,8 @@ import { settings } from './settings.js';
 export let renderer, scene, camera;
 let shaders;
 export let controls; // eslint-disable-line no-unused-vars
-export let mesh_gradient, mesh_wireframe;
-export let mat_gradient, mat_wireframe;
+export let mesh_gradient, mesh_wireframe, mesh_anim;
+export let mat_gradient, mat_wireframe, mat_anim;
 export let obj_normals, obj_path;
 export let obj_axes;
 export let banner;
@@ -49,15 +49,15 @@ export let params = {
     translateX: 0,
     translateY: 0,
   },
-  show_plane: true,
+  show_plane: false,
   show_wireframe: false,
+  show_anim: true,
   show_normals: false,
   show_path: true,
   show_axes: true,
   generate: generateBanner,
   autoGenerate: true,
 };
-
 
 
 (async function main() {
@@ -76,7 +76,7 @@ async function setup() {
   Object.assign(params, settings.params);
   banner_options = params.banner_options; // also set this object as well, since it is accessed directly
   
-  shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
+  shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag', 'anim.vert');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -123,11 +123,12 @@ async function setup() {
   mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
   mesh_wireframe.visible = params.show_wireframe;
+  scene.add(mesh_wireframe);
+  
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
   mesh_gradient.visible = params.show_plane;
   scene.add(mesh_gradient);
-  scene.add(mesh_wireframe);
-  
+    
   let mat_path = new THREE.LineBasicMaterial({ color: 0xffffff });
   obj_path = new THREE.Line(banner.path, mat_path);
   obj_path.visible = params.show_path;
@@ -152,7 +153,33 @@ async function setup() {
   // scene.add( createNormalsObj(sphere, 0.5) );
   
   gui.create();
+  
+  let pathDataTex = pathDataTexture(banner);
+  console.log(banner);
+  console.log(pathDataTex);
+  
+  mat_anim = new THREE.RawShaderMaterial({
+    uniforms: {
+      colors: { value: getColorsUniform(params.shading.colors) },
+      emissiveIntesity: { value: params.shading.emissiveIntesity },
+      diffuseIntesity: { value: params.shading.diffuseIntesity },
+      lambertStrength: { value: params.shading.lambertStrength },
+      lambertHarshness: { value: params.shading.lambertHarshness },
+      flatShading: { value: params.shading.flatShading },
+      uvTransform: { value: getUVMatrix() },
+      pathData: { value: pathDataTex },
+      bannerHeight: {value: params.banner_options.height },
+      translate: { value: new THREE.Vector3(1,1,1) },
+    },
+    vertexShader: shaders['anim.vert'],
+    fragmentShader: shaders['main.frag'],
+    side: THREE.DoubleSide,
+  });
+  mesh_anim = new THREE.Mesh(banner.flat_plane, mat_anim);
+  mesh_anim.visible = params.show_anim;
+  scene.add(mesh_anim);
 }
+
 
 export function getColorsUniform(inputColors) {
   let seq = [0, 1, 2, 3, 2, 3, 0, 1];
@@ -266,12 +293,14 @@ function createBannerGeo(options) {
   let length_segments = Math.floor(options.length * options.segment_detail);
   let height_segments = Math.floor(options.height * options.segment_detail * options.segment_proportion);
   let plane = new THREE.PlaneBufferGeometry(options.length, options.height, length_segments, height_segments);
+  let flat_plane = plane.clone();
   let plane_pos = plane.attributes.position.array;
   let plane_norm = plane.attributes.normal.array;
   // printIndexedVertices(plane);
-  console.log(plane);
+  // console.log(plane);
   
   let path = new THREE.Geometry();
+  let wing = new THREE.Geometry(); // wing direction vector
   let aircraft = new THREE.Object3D();
   let speed = options.length / length_segments;
   
@@ -287,6 +316,7 @@ function createBannerGeo(options) {
     // set respective column of plane (along z axis)
     let seg = options.height / height_segments; // size of one segment
     let v = new THREE.Vector3(0,0,1).applyEuler(aircraft.rotation); // z-axis unit vector
+    wing.vertices.push( v.clone() );
     let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.height/2) );
     let inc = v.multiplyScalar(seg);
     let norm = new THREE.Vector3(0,1,0).applyEuler(aircraft.rotation); // normal vector
@@ -305,8 +335,28 @@ function createBannerGeo(options) {
     pos = aircraft.position; // reset position
     aircraft.translateX(speed);
   }
-  return { path, plane };
+  return { plane, flat_plane, path, wing };
 }
+
+
+// Pack path and wing vectors into a two line data texture
+function pathDataTexture({ path, wing }) {
+  let width = path.vertices.length;
+  let height = 2;
+  let data = new Float32Array( width * height * 3 );
+  for (let i=0; i<width; i++) {
+    data[ i * 3 + 0 ] = path.vertices[i].x;
+    data[ i * 3 + 1 ] = path.vertices[i].y;
+    data[ i * 3 + 2 ] = path.vertices[i].z;
+    data[ (i + width) * 3 + 0 ] = wing.vertices[i].x;
+    data[ (i + width) * 3 + 1 ] = wing.vertices[i].y;
+    data[ (i + width) * 3 + 2 ] = wing.vertices[i].z;
+  }
+  let tex = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
+  tex.needsUpdate = true; // NOTE: Don't forget this, or data won't be uploaded to GPU
+  return tex;
+}
+
 
 // Returns simplex noise of range [0, 1] * amp
 // Options: seed, freq, amp
