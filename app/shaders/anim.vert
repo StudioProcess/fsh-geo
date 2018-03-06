@@ -17,8 +17,8 @@ uniform vec3 c;
 uniform vec3 d;
 
 uniform sampler2D pathData;
-uniform vec3 translate;
 uniform float bannerHeight;
+uniform float time;
 
 // varying vec3 v_color;
 varying vec2 v_uv;
@@ -35,10 +35,15 @@ vec3 bilin(vec2 uv) {
 
 void main() {
   // process position 
-  vec3 path_pos = texture2D( pathData, vec2(uv.s, 0.0) ).xyz;
-  vec3 wing_dir = texture2D( pathData, vec2(uv.s, 1.0) ).xyz;
+  float speed = 0.05; // delta-s per second
+  float s = uv.s * 0.5 + mod(speed*time, 0.5);
+  float first_s = 0.0 * 0.5 + mod(speed*time, 0.5);
   
-  vec3 pos = path_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
+  vec3 first_pos = texture2D( pathData, vec2(first_s, 0.0) ).xyz;
+  vec3 path_pos = texture2D( pathData, vec2(s, 0.0) ).xyz;
+  vec3 wing_dir = texture2D( pathData, vec2(s, 1.0) ).xyz;
+  
+  vec3 pos = path_pos - first_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
   
   /* uv pass-thru */
   v_uv = uv; 

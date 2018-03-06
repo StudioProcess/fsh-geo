@@ -66,6 +66,7 @@ export let params = {
 })();
 
 function loop(time) { // eslint-disable-line no-unused-vars
+  mat_anim.uniforms.time.value = time / 1000;
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
 }
@@ -169,7 +170,7 @@ async function setup() {
       uvTransform: { value: getUVMatrix() },
       pathData: { value: pathDataTex },
       bannerHeight: {value: params.banner_options.height },
-      translate: { value: new THREE.Vector3(1,1,1) },
+      time: { value: 0 },
     },
     vertexShader: shaders['anim.vert'],
     fragmentShader: shaders['main.frag'],
