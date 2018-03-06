@@ -378,6 +378,8 @@ document.addEventListener("keydown", e => {
   else if (e.key == 'e') {
     exportHires();
   }
+  
+  else if (e.keyCode == 8) { resetView(); } // BACKSPACE
 });
 
 
@@ -452,4 +454,12 @@ export function updateUVMatrix() {
 
 export function setBackgroundColor(col) {
   document.querySelector('canvas').style.backgroundColor = col;
+}
+
+
+function resetView() {
+  let z = 100;
+  camera.position.set(0, 0, z);
+  camera.rotation.set(0, 0, 0);
+  controls.target.set(0, 0, 0);
 }
