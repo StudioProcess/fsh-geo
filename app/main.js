@@ -500,6 +500,7 @@ function getUVMatrix() {
 
 export function updateUVMatrix() {
   mat_gradient.uniforms.uvTransform.value = getUVMatrix();
+  mat_anim.uniforms.uvTransform.value = getUVMatrix();
 }
 
 

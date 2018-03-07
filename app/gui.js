@@ -1,5 +1,5 @@
 /* globals dat */
-import { params, mat_gradient, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+import { params, mat_gradient, mat_anim, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
@@ -38,18 +38,23 @@ export function create() {
   
   shading.add(params.shading, 'emissiveIntesity', 0, 2, .01).onChange(a => {
     mat_gradient.uniforms.emissiveIntesity.value = a;
+    mat_anim.uniforms.emissiveIntesity.value = a;
   });
   shading.add(params.shading, 'diffuseIntesity', 0, 2, .01).onChange(a => {
     mat_gradient.uniforms.diffuseIntesity.value = a;
+    mat_anim.uniforms.diffuseIntesity.value = a;
   });
   shading.add(params.shading, 'lambertStrength', 0, 1, .01).onChange(a => {
     mat_gradient.uniforms.lambertStrength.value = a;
+    mat_anim.uniforms.lambertStrength.value = a;
   });
   shading.add(params.shading, 'lambertHarshness', 0, 10, .01).onChange(a => {
     mat_gradient.uniforms.lambertHarshness.value = a;
+    mat_anim.uniforms.lambertHarshness.value = a;
   });
   shading.add(params.shading, 'flatShading').onChange(a => {
     mat_gradient.uniforms.flatShading.value = a;
+    mat_anim.uniforms.flatShading.value = a;
   });
   shading.add(params.shading, 'scaleX', 0.01, 1, .01).onChange(() => updateUVMatrix());
   shading.add(params.shading, 'scaleY', 0.01, 1, .01).onChange(() => updateUVMatrix());
@@ -89,4 +94,5 @@ function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjNam
 
 function setColors() {
   mat_gradient.uniforms.colors.value = getColorsUniform(params.shading.colors);
+  mat_anim.uniforms.colors.value = getColorsUniform(params.shading.colors);
 }
