@@ -38,6 +38,7 @@ uniform vec3 d;
 uniform sampler2D pathData;
 uniform float bannerHeight;
 uniform float time;
+uniform float center;
 
 // varying vec3 v_color;
 varying vec2 v_uv;
@@ -59,25 +60,27 @@ vec3 calcNormal(vec2 uv) {
 }
 
 void main() {
-  // process position 
+  // Process position
   float speed = 0.05; // delta-s per second
   float s = uv.s * 0.5 + mod(speed*time, 0.5);
-  float first_s = 0.0 * 0.5 + mod(speed*time, 0.5);
+  float center_s = center * 0.5 + mod(speed*time, 0.5);
   
-  vec3 first_pos = texture2D( pathData, vec2(first_s, 0.0) ).xyz;
+  vec3 center_pos = texture2D( pathData, vec2(center_s, 0.0) ).xyz;
   vec3 path_pos = texture2D( pathData, vec2(s, 0.0) ).xyz;
   vec3 wing_dir = texture2D( pathData, vec2(s, 1.0) ).xyz;
   
-  vec3 pos = path_pos - first_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
+  vec3 pos = path_pos - center_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
   
-  float dispFreq = 0.5;
-  float dispAmp = 0.3;
+  float dispFreq = 1.0;
+  float dispAmp = 0.1;
   int dispOctaves = 4;
   float dispPersistence = 0.26;
   // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(vec3(uv * 10.0, 0.0), dispFreq, dispAmp); // displace according to surface location
   vec3 disp = calcNormal(vec2(s, uv.t)) * noise(pos, dispFreq, dispAmp); // displace according to space position
   // vec3 disp = normal * fractalnoise(pos, dispFreq, dispAmp, dispOctaves, dispPersistence);
-  pos += disp;
+
+  pos += disp; // Add displacement
+
   
   /* uv pass-thru */
   v_uv = uv;

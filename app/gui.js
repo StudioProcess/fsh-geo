@@ -29,6 +29,8 @@ export function create() {
     obj_axes.visible = a;
   });
   
+  let anim = gui.addFolder('Animation');
+  anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
   
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);

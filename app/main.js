@@ -57,6 +57,9 @@ export let params = {
   show_axes: true,
   generate: generateBanner,
   autoGenerate: true,
+  animation: {
+    center: 0,
+  }
 };
 
 
@@ -171,6 +174,7 @@ async function setup() {
       pathData: { value: pathDataTex },
       bannerHeight: {value: params.banner_options.height },
       time: { value: 0 },
+      center: { value: params.animation.center },
     },
     vertexShader: shaders['anim.vert'],
     fragmentShader: shaders['main.frag'],
