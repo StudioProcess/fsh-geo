@@ -354,6 +354,8 @@ function pathDataTexture({ path, wing }) {
     data[ (i + width) * 3 + 2 ] = wing.vertices[i].z;
   }
   let tex = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
   tex.needsUpdate = true; // NOTE: Don't forget this, or data won't be uploaded to GPU
   return tex;
 }
