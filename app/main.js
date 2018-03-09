@@ -14,11 +14,6 @@ export let obj_normals, obj_path;
 export let obj_axes;
 export let banner;
 
-let timeOffset = 0;
-let frameCount = 0;
-let logging = false;
-let loopPeriod = 1;
-
 export let config = {
   W: 1280,
   H: 800,
@@ -441,23 +436,13 @@ document.addEventListener("keydown", e => {
     exportHires();
   }
   else if (e.key == 'c') {
-    toggleLog();
     rec.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    toggleLog();
     rec.startstop( { start:0 } ); // record from sec 0
   }
   else if (e.key == 'b') {
-    toggleLog();
-    rec.startstop( { start:0, duration:1, framerate:10 } ); // record 1 second
-  }
-  else if (e.key == 'n') {
-    toggleLog();
-    rec.startstop( { start:0, duration:10, chunk:10} ); // record in 10 MB chunks
-  }
-  else if (e.key == 'r') {
-    resetFrame();
+    rec.startstop( { start:0, duration:15 } ); // record 15 secs
   }
   else if (e.keyCode == 8) { resetView(); } // BACKSPACE
 });
@@ -543,8 +528,4 @@ function resetView() {
   camera.position.set(0, 0, z);
   camera.rotation.set(0, 0, 0);
   controls.target.set(0, 0, 0);
-}
-
-export function toggleLog() {
-  logging != logging;
 }
