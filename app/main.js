@@ -1,6 +1,7 @@
 import noise from './noise.js';
 import * as tilesaver from './tilesaver.js';
 import * as gui from './gui.js';
+import * as rec from './recorder.js';
 import * as util from './util.js';
 import { settings } from './settings.js';
 
@@ -13,6 +14,10 @@ export let obj_normals, obj_path;
 export let obj_axes;
 export let banner;
 
+let timeOffset = 0;
+let frameCount = 0;
+let logging = false;
+let loopPeriod = 1;
 
 export let config = {
   W: 1280,
@@ -69,9 +74,10 @@ export let params = {
 })();
 
 function loop(time) { // eslint-disable-line no-unused-vars
-  mat_anim.uniforms.time.value = time / 1000;
+  mat_anim.uniforms.time.value = time / 2000;
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
+  rec.update( renderer );
 }
 
 
@@ -79,7 +85,7 @@ async function setup() {
   Object.assign(config, settings.config);
   Object.assign(params, settings.params);
   banner_options = params.banner_options; // also set this object as well, since it is accessed directly
-  
+
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag', 'anim.vert');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -89,7 +95,7 @@ async function setup() {
   renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
   setBackgroundColor(params.bgColor);
-  
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, config.W / config.H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -97,12 +103,12 @@ async function setup() {
   camera.position.z = 16;
   util.setCameraState(settings.camera);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
-  
+
   // scene.add( createDistortedCylinderObj() );
   obj_axes = createAxesObj(10);
   obj_axes.visible = params.show_axes;
   scene.add( obj_axes );
-  
+
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
       colors: { value: getColorsUniform(params.shading.colors) },
@@ -117,51 +123,51 @@ async function setup() {
     fragmentShader: shaders['main.frag'],
     side: THREE.DoubleSide,
   });
-  
-  
+
+
   let banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane, banner_options.noise_displacement);
   // perforateGeo(banner.plane);
   banner.plane.computeVertexNormals();
-  
+
   mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
   mesh_wireframe.visible = params.show_wireframe;
   scene.add(mesh_wireframe);
-  
+
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);
   mesh_gradient.visible = params.show_plane;
   scene.add(mesh_gradient);
-    
+
   let mat_path = new THREE.LineBasicMaterial({ color: 0xffffff });
   obj_path = new THREE.Line(banner.path, mat_path);
   obj_path.visible = params.show_path;
   scene.add(obj_path);
-  
+
   obj_normals = createNormalsObj(banner.plane, 0.33);
   obj_normals.visible = params.show_normals;
   scene.add(obj_normals);
-  
+
   // scene.add( createFractalNoiseObj({seed: 1, freq: 0.1, amp: 5, octaves: 5, persistence: 0.5}, 20, 400) );
-  
+
   // add cylinder for testing normals
   // let cylinder = new THREE.CylinderBufferGeometry( 1, 1, 1, 20, 20 );
   // let mesh_cylinder = new THREE.Mesh(cylinder, wireframe_mat);
   // scene.add( mesh_cylinder );
   // scene.add( createNormalsObj(cylinder) );
-  
+
   // add sphere for testing shading
   // let sphere = new THREE.SphereBufferGeometry( 2 );
   // let mesh_sphere = new THREE.Mesh(sphere, mat_gradient);
   // scene.add( mesh_sphere );
   // scene.add( createNormalsObj(sphere, 0.5) );
-  
+
   gui.create();
-  
+
   let pathDataTex = pathDataTexture(banner);
   console.log(banner);
   console.log(pathDataTex);
-  
+
   mat_anim = new THREE.RawShaderMaterial({
     uniforms: {
       colors: { value: getColorsUniform(params.shading.colors) },
@@ -264,10 +270,10 @@ function createAxesObj(scale = 1) {
     new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 1, 0 ), // y-axis (green)
     new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, 1 ), // z-axis (blue)
   );
-  
+
   let r = new THREE.Color(0xff0000), g = new THREE.Color(0x00ff00), b = new THREE.Color(0x0000ff);
   geo.colors.push(r, r, g, g, b, b);
-  
+
   let mat = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors});
   let obj = new THREE.LineSegments(geo, mat);
   obj.scale.set(scale, scale, scale);
@@ -303,12 +309,12 @@ function createBannerGeo(options) {
   let plane_norm = plane.attributes.normal.array;
   // printIndexedVertices(plane);
   // console.log(plane);
-  
+
   let path = new THREE.Geometry();
   let wing = new THREE.Geometry(); // wing direction vector
   let aircraft = new THREE.Object3D();
   let speed = options.length / length_segments;
-  
+
   // simulate path along longitudinal axis (x)
   for (let x=0; x<=length_segments; x++) {
     let apos = aircraft.position;
@@ -316,7 +322,7 @@ function createBannerGeo(options) {
     let heading = getfractalnoise(options.noise_heading, apos.x, apos.y, apos.z) * Math.PI * 2;
     let pitch = getfractalnoise(options.noise_pitch, apos.x, apos.y, apos.z) * Math.PI * 2;
     aircraft.rotation.set( roll, heading, pitch );
-    
+
     path.vertices.push( aircraft.position.clone() );
     // set respective column of plane (along z axis)
     let seg = options.height / height_segments; // size of one segment
@@ -325,7 +331,7 @@ function createBannerGeo(options) {
     let pos = aircraft.position.clone().sub( v.clone().multiplyScalar(options.height/2) );
     let inc = v.multiplyScalar(seg);
     let norm = new THREE.Vector3(0,1,0).applyEuler(aircraft.rotation); // normal vector
-    
+
     for (let y=0; y<=height_segments; y++) {
       let idx = (y * (length_segments+1) + x) * 3;
       plane_pos[idx+0] = pos.x;
@@ -409,7 +415,7 @@ function array(length = 0) {
 function createFractalNoiseObj(options, width=1, segments=10) { // eslint-disable-line no-unused-vars
   let x = array(segments+1).map(i => width/segments * i);
   let y = x.map(x => getfractalnoise(options, x));
-  
+
   let geo = new THREE.Geometry();
   for (let i=0; i<x.length; i++) {
     geo.vertices.push(new THREE.Vector3(x[i], y[i], 0));
@@ -421,21 +427,38 @@ function createFractalNoiseObj(options, width=1, segments=10) { // eslint-disabl
 
 document.addEventListener("keydown", e => {
   // console.log(e.key, e.keyCode, e);
-  
+
   if (e.key == 'f') { // f .. fullscreen
     if (!document.webkitFullscreenElement) {
       document.querySelector('body').webkitRequestFullscreen();
     } else { document.webkitExitFullscreen(); }
   }
-  
+
   else if (e.key == 'o') {
     exportOBJ(mesh_wireframe);
   }
-  
   else if (e.key == 'e') {
     exportHires();
   }
-  
+  else if (e.key == 'c') {
+    toggleLog();
+    rec.startstop(); // start/stop recording
+  }
+  else if (e.key == 'v') {
+    toggleLog();
+    rec.startstop( { start:0 } ); // record from sec 0
+  }
+  else if (e.key == 'b') {
+    toggleLog();
+    rec.startstop( { start:0, duration:1, framerate:10 } ); // record 1 second
+  }
+  else if (e.key == 'n') {
+    toggleLog();
+    rec.startstop( { start:0, duration:10, chunk:10} ); // record in 10 MB chunks
+  }
+  else if (e.key == 'r') {
+    resetFrame();
+  }
   else if (e.keyCode == 8) { resetView(); } // BACKSPACE
 });
 
@@ -471,11 +494,11 @@ function saveText(string, filename) {
 
 function exportOBJ(mesh) {
   console.log('exporting');
-  
+
   let exporter = new THREE.OBJExporter();
   let txt = exporter.parse(mesh);
   console.log(typeof txt);
-  
+
   saveText( txt, `obj_${util.timestamp()}.obj` );
 }
 
@@ -498,7 +521,7 @@ async function loadShaders(folder, ...urls) {
 
 function getUVMatrix() {
   return util.makeSRTMatrix3(
-    1/params.shading.scaleX, 1/params.shading.scaleY, 
+    1/params.shading.scaleX, 1/params.shading.scaleY,
     params.shading.rotate/360*Math.PI*2,
     -params.shading.translateX, -params.shading.translateY
   );
@@ -520,4 +543,8 @@ function resetView() {
   camera.position.set(0, 0, z);
   camera.rotation.set(0, 0, 0);
   controls.target.set(0, 0, 0);
+}
+
+export function toggleLog() {
+  logging != logging;
 }
