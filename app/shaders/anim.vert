@@ -47,7 +47,11 @@ uniform float bannerHeight;
 uniform float time;
 uniform float center;
 
-uniform int dispOctaves;
+// Surface displacement
+uniform float dispFreq;
+uniform float dispAmp;
+uniform int   dispOctaves;
+uniform float dispPersistence;
 
 // varying vec3 v_color;
 varying vec2 v_uv;
@@ -81,10 +85,6 @@ void main() {
   
   vec3 pos = path_pos - center_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
   
-  float dispFreq = 0.59;
-  float dispAmp = 0.57;
-  float dispPersistence = 0.26;
-  // int dispOctaves = 4;
   // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(vec3(uv * 10.0, 0.0), dispFreq, dispAmp); // displace according to surface location
   // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(pos, dispFreq, dispAmp); // displace according to space position
   vec3 disp = calcNormal(vec2(s, uv.t)) * fractalnoise(pos, dispFreq, dispAmp, dispOctaves, dispPersistence); // displace according to space position

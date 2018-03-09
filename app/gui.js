@@ -75,7 +75,11 @@ export function create() {
   addNoiseFolder(gui, params.banner_options, 'noise_heading', 'Heading');
   addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
   addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
-  addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  let disp = addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  getController(disp, 'freq').onChange(a => { mat_anim.uniforms.dispFreq.value = a; });
+  getController(disp, 'amp').onChange(a => { mat_anim.uniforms.dispAmp.value = a; });
+  getController(disp, 'octaves').onChange(a => { mat_anim.uniforms.dispOctaves.value = a; });
+  getController(disp, 'persistence').onChange(a => { mat_anim.uniforms.dispPersistence.value = a; });
   
   gui.add(params, 'autoGenerate');
   gui.add(params, 'generate');
@@ -93,9 +97,14 @@ function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjNam
   folder.add(noiseObj, 'amp', 0, 2, 0.01).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'octaves', 1, 4, 1).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'persistence', 0, 1, 0.01).onFinishChange(autoGenerate);
+  return folder;
 }
 
 function setColors() {
   mat_gradient.uniforms.colors.value = getColorsUniform(params.shading.colors);
   mat_anim.uniforms.colors.value = getColorsUniform(params.shading.colors);
+}
+
+function getController(gui, name) {
+  return gui.__controllers.filter(c => c.property === name)[0];
 }
