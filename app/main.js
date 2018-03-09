@@ -312,6 +312,7 @@ function createNormalsObj(inputGeo, length = 0.1) { // eslint-disable-line no-un
 function createBannerGeo(options) {
   let length_segments = Math.floor(options.length * options.segment_detail);
   let height_segments = Math.floor(options.height * options.segment_detail * options.segment_proportion);
+  console.log('banner segments: ' + length_segments + 'x' + height_segments);
   let plane = new THREE.PlaneBufferGeometry(options.length, options.height, length_segments, height_segments);
   let flat_plane = plane.clone();
   let plane_pos = plane.attributes.position.array;
