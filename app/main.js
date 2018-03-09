@@ -69,8 +69,20 @@ export let params = {
   loop(); // start game loop
 })();
 
+// Keeping track of time when playing/pausing
+let animating = false, lastTime = 0, timeOffset = 0;
+function processTime(time = 0) { // the first undefined screws up timeOffset so make it valid
+  if (!animating) {
+    timeOffset += time-lastTime;
+  }
+  lastTime = time;
+  return time - timeOffset;
+}
+
 function loop(time) { // eslint-disable-line no-unused-vars
-  mat_anim.uniforms.time.value = time / 2000;
+  time = processTime(time);
+  mat_anim.uniforms.time.value = (time) / 2000;
+  
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
   rec.update( renderer );
@@ -447,6 +459,7 @@ document.addEventListener("keydown", e => {
     rec.startstop( { start:0, duration:15 } ); // record 15 secs
   }
   else if (e.keyCode == 8) { resetView(); } // BACKSPACE
+  else if (e.keyCode == 32) { animating = !animating; } // SPACE
 });
 
 
