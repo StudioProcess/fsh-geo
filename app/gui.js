@@ -31,6 +31,7 @@ export function create() {
   
   let anim = gui.addFolder('Animation');
   anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
+  // anim.add(params.animation, 'dispOctaves', 1, 4, 1).onChange(a => { mat_anim.uniforms.dispOctaves.value = a; });
   
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);

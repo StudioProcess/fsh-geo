@@ -9,10 +9,10 @@ float noise(vec3 p, float freq, float amp) { return noise(p * freq) * amp; }
 // Fractal noise (up to 4 octaves)
 float fractalnoise(vec3 p, float freq, float amp, int octaves, float persistence) {
   float total = 0.0, max_amp = 0.0, current_amp = amp, current_freq = freq;
-  if (octaves <= 1) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
-  if (octaves <= 2) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
-  if (octaves <= 3) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
-  if (octaves <= 4) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
+  if (octaves >= 1) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
+  if (octaves >= 2) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
+  if (octaves >= 3) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
+  if (octaves >= 4) { total += noise(p, current_freq, current_amp); max_amp += current_amp; current_freq *= 2.0; current_amp *= persistence; }
   return total / max_amp * amp;
 }
 
@@ -39,6 +39,8 @@ uniform sampler2D pathData;
 uniform float bannerHeight;
 uniform float time;
 uniform float center;
+
+uniform int dispOctaves;
 
 // varying vec3 v_color;
 varying vec2 v_uv;
@@ -71,12 +73,13 @@ void main() {
   
   vec3 pos = path_pos - center_pos + (wing_dir * (uv.t-0.5) * bannerHeight);
   
-  float dispFreq = 1.0;
-  float dispAmp = 0.1;
-  int dispOctaves = 4;
+  float dispFreq = 0.59;
+  float dispAmp = 0.57;
   float dispPersistence = 0.26;
+  // int dispOctaves = 4;
   // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(vec3(uv * 10.0, 0.0), dispFreq, dispAmp); // displace according to surface location
-  vec3 disp = calcNormal(vec2(s, uv.t)) * noise(pos, dispFreq, dispAmp); // displace according to space position
+  // vec3 disp = calcNormal(vec2(s, uv.t)) * noise(pos, dispFreq, dispAmp); // displace according to space position
+  vec3 disp = calcNormal(vec2(s, uv.t)) * fractalnoise(pos, dispFreq, dispAmp, dispOctaves, dispPersistence); // displace according to space position
   // vec3 disp = normal * fractalnoise(pos, dispFreq, dispAmp, dispOctaves, dispPersistence);
 
   pos += disp; // Add displacement

@@ -59,6 +59,7 @@ export let params = {
   autoGenerate: true,
   animation: {
     center: 0,
+    dispOctaves: 4,
   }
 };
 
@@ -176,6 +177,7 @@ async function setup() {
       bannerHeight: {value: params.banner_options.height },
       time: { value: 0 },
       center: { value: params.animation.center },
+      dispOctaves: { value: params.animation.dispOctaves },
     },
     vertexShader: shaders['anim.vert'],
     fragmentShader: shaders['main.frag'],
