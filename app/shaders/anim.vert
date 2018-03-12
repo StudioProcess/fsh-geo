@@ -60,6 +60,7 @@ uniform vec3 d;
 uniform sampler2D pathData;
 uniform float bannerHeight;
 uniform float time;
+uniform float fraction;
 uniform float center;
 uniform float speed; // global speed scale for pathAnimSpeed and pathDispSpeed
 uniform float pathAnimSpeed; // delta-s/u per second
@@ -110,8 +111,10 @@ vec3 pathDisp(vec3 pos) {
 void main() {
   // Process position
   float _speed = pathAnimSpeed * speed;
-  float s = uv.s * 0.5 + mod(_speed*time, 0.5);
-  float center_s = center * 0.5 + mod(_speed*time, 0.5);
+  // float s = uv.s * 0.5 + mod(_speed*time, 0.5);
+  // float center_s = center * 0.5 + mod(_speed*time, 0.5);
+  float s = uv.s * fraction + mod(_speed*time, 1.0-fraction);
+  float center_s = center * fraction + mod(_speed*time, 1.0-fraction);
   
   vec3 center_pos = texture2D( pathData, vec2(center_s, 0.0) ).xyz;
   vec3 path_pos = texture2D( pathData, vec2(s, 0.0) ).xyz;
@@ -127,7 +130,7 @@ void main() {
   pos += disp; // Add displacement
 
   /* uv pass-thru */
-  v_uv = uv;
+  v_uv = uv * fraction;
   // v_uv = vec2(s, uv.t); // This uses actual UVs, so colors move with the part of the geometry that's shown
   
   /* normal in eye space */

@@ -58,7 +58,8 @@ export let params = {
   generate: generateBanner,
   autoGenerate: true,
   animation: {
-    center: 0,
+    fraction: 0.5,
+    center: 0.5,
     speed: 1.0,
     pathAnimSpeed: 0.01,
     pathDispSpeed: 0.1,
@@ -192,6 +193,7 @@ async function setup() {
       pathData: { value: pathDataTex },
       bannerHeight: {value: params.banner_options.height },
       time: { value: 0 },
+      fraction: { value: params.animation.fraction },
       center: { value: params.animation.center },
       speed: { value: params.animation.speed },
       pathAnimSpeed: { value: params.animation.pathAnimSpeed },
@@ -552,7 +554,7 @@ export function setBackgroundColor(col) {
 
 
 function resetView() {
-  let z = 100;
+  let z = 25;
   camera.position.set(0, 0, z);
   camera.rotation.set(0, 0, 0);
   controls.target.set(0, 0, 0);
