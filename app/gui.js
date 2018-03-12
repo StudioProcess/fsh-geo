@@ -7,29 +7,32 @@ export function create() {
   gui.addColor(params, 'bgColor').onChange(a => {
     setBackgroundColor(a);
   });
-  gui.add(params, 'show_plane').onChange(a => {
+  
+  let el = gui.addFolder('Elements');
+  el.add(params, 'show_plane').onChange(a => {
     mesh_gradient.visible = a;
   });
-  gui.add(params, 'show_wireframe').onChange(a => {
+  el.add(params, 'show_wireframe').onChange(a => {
     mesh_wireframe.visible = a;
   });
-  gui.add(params, 'show_normals').onChange(a => {
+  el.add(params, 'show_normals').onChange(a => {
     obj_normals.visible = a;
   });
-  gui.add(params, 'show_path').onChange(a => {
+  el.add(params, 'show_path').onChange(a => {
     obj_path.visible = a;
   });
-  gui.add(params, 'show_anim').onChange(a => {
+  el.add(params, 'show_anim').onChange(a => {
     mesh_anim.visible = a;
   });
   // gui.add(params, 'show_anim_wireframe').onChange(a => {
   //   mesh_anim_wireframe.visible = a;
   // });
-  gui.add(params, 'show_axes').onChange(a => {
+  el.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
   });
   
   let anim = gui.addFolder('Animation');
+  anim.open();
   anim.add(params.animation, 'fraction', 0, 0.8, 0.001).onChange(a => { mat_anim.uniforms.fraction.value = a; });
   anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
   anim.add(params.animation, 'speed', 0, 2).onChange(a => { mat_anim.uniforms.speed.value = a; });
@@ -81,6 +84,7 @@ export function create() {
   addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
   addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
   let disp = addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  disp.open();
   getController(disp, 'freq').max(1.0);
   getController(disp, 'freq').onChange(a => { mat_anim.uniforms.dispFreq.value = a; });
   getController(disp, 'amp').onChange(a => { mat_anim.uniforms.dispAmp.value = a; });
