@@ -61,7 +61,8 @@ uniform sampler2D pathData;
 uniform float bannerHeight;
 uniform float time;
 uniform float center;
-uniform float speed; // delta-s/u per second
+uniform float speed; // global speed scale for pathAnimSpeed and pathDispSpeed
+uniform float pathAnimSpeed; // delta-s/u per second
 
 // Surface displacement
 uniform float dispFreq;
@@ -98,7 +99,7 @@ vec3 calcNormal(vec2 uv) {
 // input: current path position
 vec3 pathDisp(vec3 pos) {
   // snoise(vec3 p, float freq, float amp, float seed)
-  float _time = time * pathDispSpeed / pathDispFreq; // scale this by frequency to have a consistent speed variance
+  float _time = time * pathDispSpeed*speed / pathDispFreq; // scale this by frequency to have a consistent speed variance
   vec3 _pos = pos + _time;
   float t = snoise(_pos, pathDispFreq, 1.0, 1.0) * HALF_PI;
   float p = snoise(_pos, pathDispFreq, 1.0, 2.0) * PI;
@@ -108,8 +109,9 @@ vec3 pathDisp(vec3 pos) {
 
 void main() {
   // Process position
-  float s = uv.s * 0.5 + mod(speed*time, 0.5);
-  float center_s = center * 0.5 + mod(speed*time, 0.5);
+  float _speed = pathAnimSpeed * speed;
+  float s = uv.s * 0.5 + mod(_speed*time, 0.5);
+  float center_s = center * 0.5 + mod(_speed*time, 0.5);
   
   vec3 center_pos = texture2D( pathData, vec2(center_s, 0.0) ).xyz;
   vec3 path_pos = texture2D( pathData, vec2(s, 0.0) ).xyz;

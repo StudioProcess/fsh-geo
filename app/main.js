@@ -59,10 +59,11 @@ export let params = {
   autoGenerate: true,
   animation: {
     center: 0,
-    speed: 0.01,
+    speed: 1.0,
+    pathAnimSpeed: 0.01,
+    pathDispSpeed: 0.1,
     pathDispAmp: 0.1,
     pathDispFreq: 0.1,
-    pathDispSpeed: 0.1
   }
 };
 
@@ -193,6 +194,7 @@ async function setup() {
       time: { value: 0 },
       center: { value: params.animation.center },
       speed: { value: params.animation.speed },
+      pathAnimSpeed: { value: params.animation.pathAnimSpeed },
       dispFreq: { value: banner_options.noise_displacement.freq },
       dispAmp: { value: banner_options.noise_displacement.amp },
       dispOctaves: { value: banner_options.noise_displacement.octaves },

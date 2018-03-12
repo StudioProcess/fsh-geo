@@ -31,11 +31,12 @@ export function create() {
   
   let anim = gui.addFolder('Animation');
   anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
-  anim.add(params.animation, 'speed', 0, 0.05).onChange(a => { mat_anim.uniforms.speed.value = a; });
+  anim.add(params.animation, 'speed', 0, 2).onChange(a => { mat_anim.uniforms.speed.value = a; });
+  anim.add(params.animation, 'pathAnimSpeed', 0, 0.05).onChange(a => { mat_anim.uniforms.pathAnimSpeed.value = a; });
+  anim.add(params.animation, 'pathDispSpeed', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispSpeed.value = a; });
   anim.add(params.animation, 'pathDispFreq', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispFreq.value = a; });
   anim.add(params.animation, 'pathDispAmp', 0, 2, 0.001).onChange(a => { mat_anim.uniforms.pathDispAmp.value = a; });
-  anim.add(params.animation, 'pathDispSpeed', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispSpeed.value = a; });
-  
+
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);
   shading.addColor(params.shading.colors, 1).name('color_1').onChange(setColors);
