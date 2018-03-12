@@ -59,7 +59,10 @@ export let params = {
   autoGenerate: true,
   animation: {
     center: 0,
-    dispOctaves: 4,
+    speed: 0.01,
+    pathDispAmp: 0.1,
+    pathDispFreq: 0.1,
+    pathDispSpeed: 0.1
   }
 };
 
@@ -189,10 +192,14 @@ async function setup() {
       bannerHeight: {value: params.banner_options.height },
       time: { value: 0 },
       center: { value: params.animation.center },
+      speed: { value: params.animation.speed },
       dispFreq: { value: banner_options.noise_displacement.freq },
       dispAmp: { value: banner_options.noise_displacement.amp },
       dispOctaves: { value: banner_options.noise_displacement.octaves },
       dispPersistence: { value: banner_options.noise_displacement.persistence },
+      pathDispFreq: { value: params.animation.pathDispFreq },
+      pathDispAmp: { value: params.animation.pathDispAmp },
+      pathDispSpeed: { value: params.animation.pathDispSpeed },
     },
     vertexShader: shaders['anim.vert'],
     fragmentShader: shaders['main.frag'],
