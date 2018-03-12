@@ -117,7 +117,7 @@ export let settings =
   "params": {
     "bgColor": "#fff",
     "banner_options": {
-      "length": 69.10000000000001,
+      "length": 300,
       "height": 5,
       "segment_detail": 10.5,
       "segment_proportion": 2,

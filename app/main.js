@@ -59,7 +59,7 @@ export let params = {
   autoGenerate: true,
   animation: {
     time: 0,
-    fraction: 0.5,
+    fraction: 0.2,
     center: 0.5,
     speed: 1.0,
     pathAnimSpeed: 0.01,

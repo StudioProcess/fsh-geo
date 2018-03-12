@@ -34,12 +34,12 @@ export function create() {
   
   let anim = gui.addFolder('Animation');
   anim.open();
-  anim.add(params.animation, 'fraction', 0, 0.8, 0.001).onChange(a => { mat_anim.uniforms.fraction.value = a; });
+  anim.add(params.animation, 'fraction', 0, 0.5, 0.001).onChange(a => { mat_anim.uniforms.fraction.value = a; });
   anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
   anim.add(params.animation, 'speed', 0, 2).onChange(a => { mat_anim.uniforms.speed.value = a; });
   anim.add(params.animation, 'pathAnimSpeed', 0, 0.05).onChange(a => { mat_anim.uniforms.pathAnimSpeed.value = a; });
   anim.add(params.animation, 'pathDispSpeed', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispSpeed.value = a; });
-  anim.add(params.animation, 'pathDispFreq', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispFreq.value = a; });
+  anim.add(params.animation, 'pathDispFreq', 0, 0.3).onChange(a => { mat_anim.uniforms.pathDispFreq.value = a; });
   anim.add(params.animation, 'pathDispAmp', 0, 2, 0.001).onChange(a => { mat_anim.uniforms.pathDispAmp.value = a; });
   anim.add(params.animation, 'camPos', 0, 1, 0.001);
   anim.add(params.animation, 'camLock');
