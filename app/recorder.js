@@ -188,6 +188,10 @@ export function now() {
   }
 }
 
+export function recording() {
+  return state.recording;
+}
+
 function saveTarball(options = {last:false}) {
   let seq;
   if (options && options.last && state.tarSequence == 0) {

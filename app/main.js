@@ -97,6 +97,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
   rec.update( renderer );
+  
+  updateAxesVisibility();
 }
 
 
@@ -602,5 +604,15 @@ function updateCamLock() {
   if (params.animation.camLock) {
     controls.target = pos;
     controls.update();
+  }
+}
+
+function updateAxesVisibility() {
+  if (rec.recording()) {
+    obj_axes.visible = false;
+    obj_marker.visible = false;
+  } else {
+    obj_axes.visible = params.show_axes;
+    obj_marker.visible = params.show_axes;
   }
 }
