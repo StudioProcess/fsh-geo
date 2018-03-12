@@ -11,7 +11,7 @@ export let controls; // eslint-disable-line no-unused-vars
 export let mesh_gradient, mesh_wireframe, mesh_anim;
 export let mat_gradient, mat_wireframe, mat_anim;
 export let obj_normals, obj_path;
-export let obj_axes;
+export let obj_axes, obj_marker;
 export let banner;
 
 export let config = {
@@ -58,6 +58,7 @@ export let params = {
   generate: generateBanner,
   autoGenerate: true,
   animation: {
+    time: 0,
     fraction: 0.5,
     center: 0.5,
     speed: 1.0,
@@ -65,6 +66,8 @@ export let params = {
     pathDispSpeed: 0.1,
     pathDispAmp: 0.1,
     pathDispFreq: 0.1,
+    camPos: 0.5,
+    camLock: false,
   }
 };
 
@@ -81,12 +84,15 @@ function processTime(time = 0) { // the first undefined screws up timeOffset so 
     timeOffset += time-lastTime;
   }
   lastTime = time;
-  return time - timeOffset;
+  return (time - timeOffset) / 1000;
 }
 
 function loop(time) { // eslint-disable-line no-unused-vars
   time = processTime(time);
-  mat_anim.uniforms.time.value = (time) / 2000;
+  params.animation.time = time;
+  mat_anim.uniforms.time.value = time;
+  
+  updateCamLock();
   
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
@@ -138,7 +144,7 @@ async function setup() {
   });
 
 
-  let banner = createBannerGeo(banner_options);
+  banner = createBannerGeo(banner_options);
   displaceGeo(banner.plane, banner_options.noise_displacement);
   // perforateGeo(banner.plane);
   banner.plane.computeVertexNormals();
@@ -212,6 +218,10 @@ async function setup() {
   mesh_anim = new THREE.Mesh(banner.flat_plane, mat_anim);
   mesh_anim.visible = params.show_anim;
   scene.add(mesh_anim);
+  
+  obj_marker = createAxesObj(2);
+  obj_marker.visible = params.show_axes;
+  scene.add(obj_marker);
 }
 
 
@@ -479,11 +489,11 @@ document.addEventListener("keydown", e => {
 
 
 function exportHires() {
-  if (params.show_axes) { obj_axes.visible = false; }
+  if (params.show_axes) { obj_axes.visible = false; obj_marker.visible = false; }
   let saved = util.saveSettings();
   console.log(saved);
   tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
-    if (params.show_axes) { obj_axes.visible = true; }
+    if (params.show_axes) { obj_axes.visible = true; obj_marker.visible = false; }
     console.log(`Saved to: ${f}`);
   });
 }
@@ -558,4 +568,39 @@ function resetView() {
   camera.position.set(0, 0, z);
   camera.rotation.set(0, 0, 0);
   controls.target.set(0, 0, 0);
+}
+
+
+// linear filtered path sample
+function samplePath(s) {
+  s = ( s + Math.abs(Math.trunc(s)) ) % 1;
+  let idx = (banner.path.vertices.length-1) * s;
+  let idx0 = Math.floor(idx);
+  let idx1 = Math.ceil(idx);
+  if (s == 1) { idx0 = idx1 = banner.path.vertices.length-1; }
+  let a = idx - idx0;
+  let p0 = banner.path.vertices[idx0].clone();
+  let p1 = banner.path.vertices[idx1].clone();
+  return p0.multiplyScalar(1-a).addScaledVector(p1, a);
+}
+
+function getCurrentPathPos(s = 0) {
+  let speed = params.animation.pathAnimSpeed * params.animation.speed;
+  let time_mod = (speed * params.animation.time) % (1 - params.animation.fraction);
+  
+  s = s * params.animation.fraction + time_mod;
+  let center_s = params.animation.center * params.animation.fraction + time_mod;
+  let path_pos = samplePath(s);
+  let center_pos = samplePath(center_s);
+  return path_pos.sub(center_pos);
+}
+
+function updateCamLock() {
+  let pos = getCurrentPathPos(params.animation.camPos);
+  obj_marker.position.set(pos.x, pos.y, pos.z);
+  
+  if (params.animation.camLock) {
+    controls.target = pos;
+    controls.update();
+  }
 }

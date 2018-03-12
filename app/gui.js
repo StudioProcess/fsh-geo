@@ -1,5 +1,5 @@
 /* globals dat */
-import { params, mat_gradient, mat_anim, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+import { params, mat_gradient, mat_anim, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, obj_marker, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
@@ -29,6 +29,7 @@ export function create() {
   // });
   el.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
+    obj_marker.visible = a;
   });
   
   let anim = gui.addFolder('Animation');
@@ -40,7 +41,9 @@ export function create() {
   anim.add(params.animation, 'pathDispSpeed', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispSpeed.value = a; });
   anim.add(params.animation, 'pathDispFreq', 0, 0.5).onChange(a => { mat_anim.uniforms.pathDispFreq.value = a; });
   anim.add(params.animation, 'pathDispAmp', 0, 2, 0.001).onChange(a => { mat_anim.uniforms.pathDispAmp.value = a; });
-
+  anim.add(params.animation, 'camPos', 0, 1, 0.001);
+  anim.add(params.animation, 'camLock');
+  
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);
   shading.addColor(params.shading.colors, 1).name('color_1').onChange(setColors);
