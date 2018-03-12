@@ -76,6 +76,7 @@ export function create() {
   addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
   addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
   let disp = addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  getController(disp, 'freq').max(1.0);
   getController(disp, 'freq').onChange(a => { mat_anim.uniforms.dispFreq.value = a; });
   getController(disp, 'amp').onChange(a => { mat_anim.uniforms.dispAmp.value = a; });
   getController(disp, 'octaves').onChange(a => { mat_anim.uniforms.dispOctaves.value = a; });
