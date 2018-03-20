@@ -43,6 +43,8 @@ export function create() {
   anim.add(params.animation, 'pathDispAmp', 0, 2, 0.001).onChange(a => { mat_anim.uniforms.pathDispAmp.value = a; });
   anim.add(params.animation, 'camPos', 0, 1, 0.001);
   anim.add(params.animation, 'camLock');
+  anim.add(params.animation, 'distLock');
+  anim.add(params.animation, 'camDist', 0, 10, 0.001);
   
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);

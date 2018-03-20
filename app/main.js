@@ -68,6 +68,8 @@ export let params = {
     pathDispFreq: 0.1,
     camPos: 0.5,
     camLock: false,
+    camDist: 2,
+    distLock: false,
   }
 };
 
@@ -598,11 +600,14 @@ function getCurrentPathPos(s = 0) {
 }
 
 function updateCamLock() {
-  let pos = getCurrentPathPos(params.animation.camPos);
-  obj_marker.position.set(pos.x, pos.y, pos.z);
-  
+  let t = getCurrentPathPos(params.animation.camPos); // target position
+  obj_marker.position.set(t.x, t.y, t.z);
   if (params.animation.camLock) {
-    controls.target = pos;
+    if (params.animation.distLock) {
+      let p = camera.position;// camera position
+      p.sub(t).setLength(params.animation.camDist).add(t);
+    }
+    controls.target = t;
     controls.update();
   }
 }
