@@ -6,10 +6,16 @@
   <link rel="stylesheet" href="app/main.css">
 </head>
 <body>
-  <script src="node_modules/three/build/three.js"></script>
-  <script src="node_modules/three/examples/js/controls/OrbitControls.js"></script>
-  <script src="node_modules/three/examples/js/exporters/OBJExporter.js"></script>
-  <script src="node_modules/dat.gui/build/dat.gui.js"></script>
-  <script type="module" src="app/main.js"></script>
+  <script>
+    // LOCAL DEV VERSION
+    if (location.hostname == 'localhost' || location.hostname == '127.0.0.1') {
+      window.location.replace('index.dev.html');
+    }
+    // BUNDLED VERSION
+    const BUNDLE_VERSION = '37ce5ec';
+    let script = document.createElement('script');
+    script.src = 'app/main.bundle.js?v=' + BUNDLE_VERSION;
+    document.querySelector('body').appendChild(script);
+  </script>
 </body>
 </html>
