@@ -23,6 +23,7 @@
   "devDependencies": {
     "browser-sync": "^2.23.5",
     "rollup": "^0.62.0",
-    "rollup-plugin-multi-entry": "^2.0.2"
+    "rollup-plugin-multi-entry": "^2.0.2",
+    "rollup-plugin-terser": "^1.0.1"
   }
 }

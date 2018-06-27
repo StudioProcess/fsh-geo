@@ -1,4 +1,5 @@
 import multiEntry from 'rollup-plugin-multi-entry';
+import { terser } from "rollup-plugin-terser";
 
 export default {
   input: [
@@ -14,5 +15,5 @@ export default {
     format: 'iife',
     name: 'app'
   },
-  plugins: [ multiEntry() ],
+  plugins: [ multiEntry(), terser() ]
 };
