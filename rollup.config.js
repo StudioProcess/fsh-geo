@@ -1,5 +1,10 @@
 import multiEntry from 'rollup-plugin-multi-entry';
+import buble from 'rollup-plugin-buble';
 import { terser } from "rollup-plugin-terser";
+
+const bubleConfig = {
+  transforms: { forOf: false } // See: https://buble.surge.sh/guide/#unsupported-features
+};
 
 export default {
   input: [
@@ -15,5 +20,5 @@ export default {
     format: 'iife',
     name: 'app'
   },
-  plugins: [ multiEntry(), terser() ]
+  plugins: [ multiEntry(), buble(bubleConfig), terser() ]
 };

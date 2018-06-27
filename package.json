@@ -11,7 +11,8 @@
     "start": "browser-sync start --server --port 8080 --no-notify --files index.html app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "reinstall": "rm -rf node_modules && npm install",
-    "bundle": "rollup --config && node update_hash"
+    "bundle": "rollup --config && node update_hash",
+    "build": "npm run bundle"
   },
   "keywords": [],
   "author": "Process <contact@process.studio> (https://process.studio)",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "browser-sync": "^2.23.5",
     "rollup": "^0.62.0",
+    "rollup-plugin-buble": "^0.19.2",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-terser": "^1.0.1"
   }
