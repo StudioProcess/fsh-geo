@@ -79,10 +79,12 @@ async function setup() {
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
   renderer = new THREE.WebGLRenderer({
     antialias: true,
-    alpha: true
+    alpha: true,
+    preserveDrawingBuffer: true
   });
   renderer.setSize( config.W, config.H );
-  renderer.setPixelRatio( window.devicePixelRatio );
+  // renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio(1);
   document.body.appendChild( renderer.domElement );
   setBackgroundColor(params.bgColor);
   
@@ -371,12 +373,16 @@ document.addEventListener("keydown", e => {
     } else { document.webkitExitFullscreen(); }
   }
   
-  else if (e.key == 'o') {
-    exportOBJ(mesh_wireframe);
-  }
+  // else if (e.key == 'o') {
+  //   exportOBJ(mesh_wireframe);
+  // }
+  // 
+  // else if (e.key == 'e') {
+  //   exportHires();
+  // }
   
-  else if (e.key == 'e') {
-    exportHires();
+  else if (e.key == 's') {
+    saveCanvas();
   }
 });
 
@@ -410,14 +416,11 @@ function saveText(string, filename) {
 }
 
 
-function exportOBJ(mesh) {
-  console.log('exporting');
-  
-  let exporter = new THREE.OBJExporter();
-  let txt = exporter.parse(mesh);
-  console.log(typeof txt);
-  
-  saveText( txt, `obj_${util.timestamp()}.obj` );
+export function saveCanvas() {
+  saveURL(
+    document.querySelector('canvas').toDataURL(),
+    new Date().toISOString() + '.png'
+  );
 }
 
 
