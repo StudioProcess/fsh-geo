@@ -1,6 +1,17 @@
-export let settings = 
+export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
+/*
+/ COLORS FOR SEASON 2018/2019
+
+"colors": [
+  "#ed1c24",
+  "#c83e81",
+  "#701655",
+  "#8781bd"
+]
+
+*/
 
 {
   "version": 3,
@@ -65,10 +76,10 @@ export let settings =
     },
     "shading": {
       "colors": [
+        "#fed09e",
+        "#f37021",
         "#ed1c24",
-        "#c83e81",
-        "#701655",
-        "#8781bd"
+        "#c83f80"
       ],
       "emissiveIntesity": 0.19,
       "diffuseIntesity": 1,
