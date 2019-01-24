@@ -35,6 +35,7 @@ let banner_options = {
 
 export let params = {
   bgColor: '#606060',
+  wireframeColor: '#4a4444',
   banner_options,
   shading: {
     colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd'],
@@ -120,7 +121,7 @@ async function setup() {
   // perforateGeo(banner.plane);
   banner.plane.computeVertexNormals();
   
-  mat_wireframe = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
+  mat_wireframe = new THREE.MeshBasicMaterial({ color: params.wireframeColor, wireframe: true });
   mesh_wireframe = new THREE.Mesh(banner.plane, mat_wireframe);
   mesh_wireframe.visible = params.show_wireframe;
   mesh_gradient = new THREE.Mesh(banner.plane, mat_gradient);

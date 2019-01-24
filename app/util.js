@@ -82,7 +82,7 @@ export function saveSettings(_timestamp) {
   if (!_timestamp) { _timestamp = timestamp(); }
   let filename = _timestamp + '.json';
   let state = {
-    version: 4,
+    version: 5,
     timestamp: _timestamp,
     camera: getCameraState(),
     config: main.config,
