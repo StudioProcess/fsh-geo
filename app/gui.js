@@ -64,7 +64,7 @@ export function create() {
   addNoiseFolder(gui, params.banner_options, 'noise_heading', 'Heading');
   addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
   addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
-  addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement');
+  addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement', 4, 4);
   
   gui.add(params, 'autoGenerate');
   gui.add(params, 'generate');
@@ -74,12 +74,12 @@ function autoGenerate() {
   if (params.autoGenerate) params.generate();
 }
 
-function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjName) {
+function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjName, maxAmp = 2, maxFreq = 0.2) {
   let folder = guiOrFolder.addFolder(folderName);
   let noiseObj = obj[noiseObjName];
   folder.add(noiseObj, 'seed', 0, 99, 1).onFinishChange(autoGenerate);
-  folder.add(noiseObj, 'freq', 0.01, 0.2, 0.01).onFinishChange(autoGenerate);
-  folder.add(noiseObj, 'amp', 0.01, 2, 0.01).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'freq', 0.01, maxFreq, 0.01).onFinishChange(autoGenerate);
+  folder.add(noiseObj, 'amp', 0.01, maxAmp, 0.01).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'octaves', 1, 4, 1).onFinishChange(autoGenerate);
   folder.add(noiseObj, 'persistence', 0, 1, 0.01).onFinishChange(autoGenerate);
 }
