@@ -1,8 +1,6 @@
-export let settings =
-/* PASTE CONTENTS OF SETTINGS FILE BELOW */
-/* ------------------------------------- */
 /*
-/ COLORS FOR SEASON 2018/2019
+
+COLORS FOR SEASON 2018/19
 
 "colors": [
   "#ed1c24",
@@ -11,21 +9,35 @@ export let settings =
   "#8781bd"
 ]
 
+COLORS SEASON 2019/20 (not final)
+
+"colors": [
+  "#ff5959",
+  "#ffea3b",
+  "#ed1c24",
+  "#c83f80"
+]
+
 */
 
+export let settings =
+
+/* PASTE CONTENTS OF SETTINGS FILE BELOW */
+/* ------------------------------------- */
+
 {
-  "version": 3,
-  "timestamp": "2018-02-21T14:41:16.076Z",
+  "version": 5,
+  "timestamp": "2019-01-24T10:32:52.040Z",
   "camera": {
     "position": {
-      "x": 20.700402076933212,
-      "y": 13.036127620232156,
-      "z": 3.6267694435057454
+      "x": 5.986152706363194,
+      "y": 0.5361084376585978,
+      "z": 1.9240735948512278
     },
     "rotation": {
-      "_x": 2.8839771958708753,
-      "_y": 0.5682474144331807,
-      "_z": -3.000743697497986,
+      "_x": 2.160416383743487,
+      "_y": 0.6440545238449568,
+      "_z": -2.4101520470170597,
       "_order": "XYZ"
     },
     "fov": 75,
@@ -40,20 +52,21 @@ export let settings =
   },
   "params": {
     "bgColor": "#fff",
+    "wireframeColor": "#4a4444",
     "banner_options": {
-      "length": 69.10000000000001,
+      "length": 71.3,
       "height": 5,
       "segment_detail": 10.5,
       "segment_proportion": 2,
       "noise_heading": {
-        "seed": 111,
+        "seed": 95,
         "freq": 0.1,
         "amp": 0.26,
         "octaves": 1,
         "persistence": 0.5
       },
       "noise_pitch": {
-        "seed": 222,
+        "seed": 86,
         "freq": 0.2,
         "amp": 0.06,
         "octaves": 1,
@@ -61,14 +74,14 @@ export let settings =
       },
       "noise_roll": {
         "seed": 333,
-        "freq": 0.2,
+        "freq": 0.14,
         "amp": 0.63,
         "octaves": 1,
         "persistence": 0.5
       },
       "noise_displacement": {
         "seed": 0,
-        "freq": 0.59,
+        "freq": 0.75,
         "amp": 1.07,
         "octaves": 4,
         "persistence": 0.26
@@ -76,24 +89,25 @@ export let settings =
     },
     "shading": {
       "colors": [
-        "#fed09e",
-        "#f37021",
+        "#ff5959",
+        "#ffea3b",
         "#ed1c24",
         "#c83f80"
       ],
-      "emissiveIntesity": 0.19,
-      "diffuseIntesity": 1,
-      "lambertStrength": 0,
-      "lambertHarshness": 0,
+      "emissiveIntesity": 1.18,
+      "diffuseIntesity": 0.5700000000000001,
+      "lambertStrength": 0.66,
+      "lambertHarshness": 0.05,
       "flatShading": true,
-      "scaleX": 0.24,
-      "scaleY": 1,
+      "scaleX": 0.13,
+      "scaleY": 0.26,
       "rotate": 0,
-      "translateX": 0,
-      "translateY": 0
+      "translateX": 0.8,
+      "translateY": 0.73
     },
-    "show_normals": false,
+    "show_plane": true,
     "show_wireframe": false,
+    "show_normals": false,
     "show_path": false,
     "show_axes": true,
     "autoGenerate": true
