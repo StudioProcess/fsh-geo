@@ -93,7 +93,7 @@ async function setup() {
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.screenSpacePanning = true;
   controls.zoomSpeed = 2.0;
-  console.log(controls);
+  // console.log(controls);
 
   util.setCameraState(settings.camera);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
@@ -165,6 +165,24 @@ async function setup() {
   // scene.add( createNormalsObj(sphere, 0.5) );
   
   gui.create();
+  
+  let  raycaster = new THREE.Raycaster();
+  renderer.domElement.addEventListener('dblclick', (e) => {
+    // let canvas = e.target
+    let mouse_ndc = new THREE.Vector2(
+      e.offsetX/e.target.clientWidth * 2 - 1,
+      -e.offsetY/e.target.clientHeight * 2 + 1
+    );
+    // console.log(mouse_ndc);
+    raycaster.setFromCamera(mouse_ndc, camera);
+    let intersects = raycaster.intersectObject(mesh_gradient);
+    if (intersects.length > 0) {
+      let point = intersects[0].point;
+      controls.target.set(point.x, point.y, point.z);
+      controls.update();
+    }
+  });
+
 }
 
 export function getColorsUniform(inputColors) {
@@ -479,4 +497,8 @@ export function updateUVMatrix() {
 
 export function setBackgroundColor(col) {
   document.querySelector('canvas').style.backgroundColor = col;
+}
+
+function getClickedPoint() {
+  
 }
