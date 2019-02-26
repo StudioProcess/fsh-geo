@@ -89,9 +89,12 @@ async function setup() {
   
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, config.W / config.H, 0.01, 1000 );
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls.dampingFactor = 0.1;
   camera.position.z = 16;
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls.screenSpacePanning = true;
+  controls.zoomSpeed = 2.0;
+  console.log(controls);
+
   util.setCameraState(settings.camera);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
