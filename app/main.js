@@ -10,7 +10,7 @@ export let controls; // eslint-disable-line no-unused-vars
 export let mesh_gradient, mesh_wireframe;
 export let mat_gradient, mat_wireframe;
 export let obj_normals, obj_path;
-export let obj_axes;
+export let obj_axes, obj_origin, obj_camtarget;
 export let banner;
 
 
@@ -99,10 +99,19 @@ async function setup() {
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
   
   // scene.add( createDistortedCylinderObj() );
-  obj_axes = createAxesObj(10);
+  obj_axes = new THREE.Group();
   obj_axes.visible = params.show_axes;
   scene.add( obj_axes );
-  
+    
+  obj_origin = createAxesObj(10);
+  obj_axes.add(obj_origin);
+
+  obj_camtarget = createCrossObj(5);
+  obj_axes.add(obj_camtarget);
+  const setCamtargetObj = () => { obj_camtarget.position.set(controls.target.x, controls.target.y, controls.target.z); };
+  controls.addEventListener('change', setCamtargetObj);
+  setCamtargetObj();
+    
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
       colors: { value: getColorsUniform(params.shading.colors) },
@@ -241,6 +250,20 @@ function createAxesObj(scale = 1) {
   geo.colors.push(r, r, g, g, b, b);
   
   let mat = new THREE.LineBasicMaterial({vertexColors:THREE.VertexColors});
+  let obj = new THREE.LineSegments(geo, mat);
+  obj.scale.set(scale, scale, scale);
+  return obj;
+}
+
+function createCrossObj(scale = 1) {
+  let geo = new THREE.Geometry();
+  geo.vertices.push(
+    new THREE.Vector3( -.5, 0, 0 ), new THREE.Vector3( .5, 0, 0 ), // x-axis (red)
+    new THREE.Vector3( 0, -.5, 0 ), new THREE.Vector3( 0, .5, 0 ), // y-axis (green)
+    new THREE.Vector3( 0, 0, -.5 ), new THREE.Vector3( 0, 0, .5 ), // z-axis (blue)
+  );
+  let color = new THREE.Color(0x000000);
+  let mat = new THREE.LineBasicMaterial({color});
   let obj = new THREE.LineSegments(geo, mat);
   obj.scale.set(scale, scale, scale);
   return obj;
@@ -386,7 +409,7 @@ document.addEventListener("keydown", e => {
 
 
 function exportHires() {
-  if (params.show_axes) { obj_axes.visible = false; }
+  if (params.show_axes) { obj_axes.visible = false;}
   let saved = util.saveSettings();
   console.log(saved);
   tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
