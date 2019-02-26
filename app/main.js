@@ -280,7 +280,7 @@ function createCrossObj(scale = 1) {
     new THREE.Vector3( 0, -.5, 0 ), new THREE.Vector3( 0, .5, 0 ), // y-axis (green)
     new THREE.Vector3( 0, 0, -.5 ), new THREE.Vector3( 0, 0, .5 ), // z-axis (blue)
   );
-  let color = new THREE.Color(0x000000);
+  let color = new THREE.Color('#646464');
   let mat = new THREE.LineBasicMaterial({color});
   let obj = new THREE.LineSegments(geo, mat);
   obj.scale.set(scale, scale, scale);
