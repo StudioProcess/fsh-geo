@@ -415,7 +415,7 @@ function createFractalNoiseObj(options, width=1, segments=10) { // eslint-disabl
 
 
 document.addEventListener("keydown", e => {
-  // console.log(e.key, e.keyCode, e);
+  console.log(e.key, e.keyCode, e);
   
   if (e.key == 'f') { // f .. fullscreen
     toggleFullscreen();
@@ -427,6 +427,10 @@ document.addEventListener("keydown", e => {
   
   else if (e.key == 'e' || e.key == 'x') {
     exportHires();
+  }
+  
+  else if (e.key == 'Tab' || e.key == 'h') {
+    gui.toggle();
   }
 });
 

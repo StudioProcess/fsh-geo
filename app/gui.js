@@ -112,3 +112,8 @@ function addNoiseFolder(guiOrFolder, obj, noiseObjName, folderName = noiseObjNam
 function setColors() {
   mat_gradient.uniforms.colors.value = getColorsUniform(params.shading.colors);
 }
+
+export function toggle() {
+  if (gui.closed) gui.open();
+  else gui.close();
+}
