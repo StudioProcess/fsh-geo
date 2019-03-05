@@ -48,7 +48,6 @@ export let settings =
   "config": {
     "W": 1280,
     "H": 800,
-    "EXPORT_TILES": 6
   },
   "params": {
     "bgColor": "#ffffff",

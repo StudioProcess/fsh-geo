@@ -17,7 +17,7 @@ export let banner;
 export let config = {
   W: 1280,
   H: 800,
-  EXPORT_TILES: 4,
+  EXPORT_TILES: 8,
 };
 
 // Aircraft principal axes:
@@ -462,6 +462,7 @@ function reset() {
 }
 
 function exportHires() {
+  gui.lock();
   if (params.show_axes) { obj_axes.visible = false;}
   // let saved = util.saveSettings();
   // console.log(saved);
@@ -469,10 +470,15 @@ function exportHires() {
   //   if (params.show_axes) { obj_axes.visible = true; }
   //   console.log(`Saved to: ${f}`);
   // });
-  tilesaver.save( {timestamp:util.timestamp()} ).then(f => {
-    if (params.show_axes) { obj_axes.visible = true; }
-    console.log(`Saved to: ${f}`);
-  });
+  setTimeout(() => {
+    tilesaver.save( {timestamp:'fsh_'+util.timestamp()} ).then(f => {
+      if (params.show_axes) { obj_axes.visible = true; }
+      console.log(`Saved to: ${f}`);
+      gui.lock(false);
+    }).catch(() => {
+      gui.lock(false);
+    });
+  }, 10);
 }
 
 function saveURL(url, filename) {
@@ -536,8 +542,4 @@ export function updateUVMatrix() {
 
 export function setBackgroundColor(col) {
   document.querySelector('canvas').style.backgroundColor = col;
-}
-
-function getClickedPoint() {
-  
 }

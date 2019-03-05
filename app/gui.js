@@ -117,3 +117,13 @@ export function toggle() {
   if (gui.closed) gui.open();
   else gui.close();
 }
+
+export function lock(lock = true) {
+  if (lock) {
+    gui.domElement.style.pointerEvents = 'none';
+    gui.domElement.style.opacity = 0.5;
+  } else {
+    gui.domElement.style.pointerEvents = 'auto';
+    gui.domElement.style.opacity = 1;
+  }
+}
