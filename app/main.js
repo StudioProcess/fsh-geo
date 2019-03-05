@@ -34,6 +34,11 @@ let banner_options = {
 };
 
 export let params = {
+  exportHires: exportHires,
+  toggleFullscreen: toggleFullscreen,
+  resetView,
+  resetColors,
+  reset,
   bgColor: '#606060',
   wireframeColor: '#4a4444',
   banner_options,
@@ -74,7 +79,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
 async function setup() {
   Object.assign(config, settings.config);
-  Object.assign(params, settings.params);
+  let params_copy = JSON.parse(JSON.stringify(settings.params));
+  Object.assign(params, params_copy);
   banner_options = params.banner_options; // also set this object as well, since it is accessed directly
   
   shaders = await loadShaders('app/shaders/', 'test.vert', 'test.frag', 'main.vert', 'main.frag');
@@ -105,6 +111,7 @@ async function setup() {
     
   obj_origin = createAxesObj(10);
   obj_axes.add(obj_origin);
+  obj_origin.visible = false;
 
   obj_camtarget = createCrossObj(5);
   obj_axes.add(obj_camtarget);
@@ -202,7 +209,7 @@ function generateBanner() {
 
 function createDistortedCylinderObj() { // eslint-disable-line
   let geo = new THREE.CylinderBufferGeometry( 100, 100, 100, 200, 100, true );
-  console.log(geo);
+  // console.log(geo);
   displaceGeo(geo);
   perforateGeo(geo);
   let mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
@@ -314,7 +321,7 @@ function createBannerGeo(options) {
   let plane_pos = plane.attributes.position.array;
   let plane_norm = plane.attributes.normal.array;
   // printIndexedVertices(plane);
-  console.log(plane);
+  // console.log(plane);
   
   let path = new THREE.Geometry();
   let aircraft = new THREE.Object3D();
@@ -411,26 +418,54 @@ document.addEventListener("keydown", e => {
   // console.log(e.key, e.keyCode, e);
   
   if (e.key == 'f') { // f .. fullscreen
-    if (!document.webkitFullscreenElement) {
-      document.querySelector('body').webkitRequestFullscreen();
-    } else { document.webkitExitFullscreen(); }
+    toggleFullscreen();
   }
   
-  else if (e.key == 'o') {
-    exportOBJ(mesh_wireframe);
-  }
+  // else if (e.key == 'o') {
+  //   exportOBJ(mesh_wireframe);
+  // }
   
-  else if (e.key == 'e') {
+  else if (e.key == 'e' || e.key == 'x') {
     exportHires();
   }
 });
 
+function toggleFullscreen() {
+  if (!document.webkitFullscreenElement) {
+    document.querySelector('body').webkitRequestFullscreen();
+  } else { document.webkitExitFullscreen(); }
+}
+
+function resetView() {
+  util.setCameraState(settings.camera);
+  controls.update();
+}
+
+function resetColors() {
+  gui.colors.__controllers[0].setValue(settings.params.shading.translateX);
+  gui.colors.__controllers[1].setValue(settings.params.shading.translateY);
+  gui.colors.__controllers[2].setValue(settings.params.shading.scaleX);
+  gui.colors.__controllers[3].setValue(settings.params.shading.scaleY);
+}
+
+function reset() {
+  resetView();
+  resetColors();
+  // reset bg color
+  gui.view.__controllers[1].setValue(settings.params.bgColor);
+  // reset axes display
+  gui.view.__controllers[2].setValue(settings.params.show_axes);
+}
 
 function exportHires() {
   if (params.show_axes) { obj_axes.visible = false;}
-  let saved = util.saveSettings();
-  console.log(saved);
-  tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
+  // let saved = util.saveSettings();
+  // console.log(saved);
+  // tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
+  //   if (params.show_axes) { obj_axes.visible = true; }
+  //   console.log(`Saved to: ${f}`);
+  // });
+  tilesaver.save( {timestamp:util.timestamp()} ).then(f => {
     if (params.show_axes) { obj_axes.visible = true; }
     console.log(`Saved to: ${f}`);
   });

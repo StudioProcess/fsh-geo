@@ -1,9 +1,35 @@
 /* globals dat */
 import { params, mat_gradient, mat_wireframe, mesh_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+let gui;
+export let view, colors;
 
 export function create() {
-  let gui = new dat.GUI();
+  gui = new dat.GUI({hideable:false});
+  gui.add(params, 'exportHires').name('Bild exportieren');
+  gui.add(params, 'reset').name('Alles zurücksetzen');
   
+  view = gui.addFolder('Ansicht');
+  view.open();
+  view.add(params, 'toggleFullscreen').name('Vollbild an/aus');
+  view.addColor(params, 'bgColor').name('Hintergrund').onChange(a => {
+    setBackgroundColor(a);
+  });
+  view.add(params, 'show_axes').name('Kamerazentrum').onChange(a => {
+    obj_axes.visible = a;
+  });
+  view.add(params, 'resetView').name('Kamera zurücksetzen');
+  
+  colors = gui.addFolder('Farben');
+  // colors.open();
+  colors.add(params.shading, 'translateX', 0, .5, .01).name('Verschieben (X)').onChange(() => updateUVMatrix());
+  colors.add(params.shading, 'translateY', 0, 2, .01).name('Verschieben (Y)').onChange(() => updateUVMatrix());
+  colors.add(params.shading, 'scaleX', 0.28, 1, .01).name('Strecken (X)').onChange(() => updateUVMatrix());
+  colors.add(params.shading, 'scaleY', 0.46, 1, .01).name('Strecken (Y)').onChange(() => updateUVMatrix());
+  colors.add(params, 'resetColors').name('Farben zurücksetzen');
+}
+
+export function createExpert() {
+  gui = gui.addFolder('Expert');
   gui.addColor(params, 'bgColor').onChange(a => {
     setBackgroundColor(a);
   });
@@ -25,7 +51,6 @@ export function create() {
   gui.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
   });
-  
   
   let shading = gui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);

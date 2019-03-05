@@ -15,3 +15,5 @@ canvas {
   width: 100% !important;
   height: auto !important;
 }
+
+.cr.function span { width:100%; }
