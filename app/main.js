@@ -514,11 +514,11 @@ document.addEventListener("keydown", e => {
 
 
 function exportHires() {
-  if (params.show_axes) { obj_axes.visible = false; obj_marker.visible = false; }
+  if (params.show_axes) { obj_axes.visible = false; obj_marker.visible = false; obj_camtarget.visible = false; }
   let saved = util.saveSettings();
   console.log(saved);
   tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
-    if (params.show_axes) { obj_axes.visible = true; obj_marker.visible = false; }
+    if (params.show_axes) { obj_axes.visible = true; obj_marker.visible = true; obj_camtarget.visible = false; }
     console.log(`Saved to: ${f}`);
   });
 }
@@ -637,8 +637,10 @@ function updateAxesVisibility() {
   if (rec.recording()) {
     obj_axes.visible = false;
     obj_marker.visible = false;
+    obj_camtarget.visible = false;
   } else {
     obj_axes.visible = params.show_axes;
     obj_marker.visible = params.show_axes;
+    obj_camtarget.visible = params.show_axes;
   }
 }
