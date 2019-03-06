@@ -81,7 +81,7 @@ export let settings =
       "noise_displacement": {
         "seed": 0,
         "freq": 0.59,
-        "amp": 1.07,
+        "amp": 0.6,
         "octaves": 4,
         "persistence": 0.26
       }
