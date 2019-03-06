@@ -1,5 +1,5 @@
 /* globals dat */
-import { params, mat_gradient, mat_anim, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, obj_marker, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+import { params, mat_gradient, mat_anim, mesh_gradient, mesh_wireframe, mesh_anim, obj_normals, obj_path, obj_axes, obj_marker, obj_camtarget, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
 
 export function create() {
   let gui = new dat.GUI();
@@ -30,6 +30,7 @@ export function create() {
   el.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
     obj_marker.visible = a;
+    obj_camtarget.visible = a;
   });
   
   let anim = gui.addFolder('Animation');

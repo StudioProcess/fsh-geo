@@ -11,7 +11,7 @@ export let controls; // eslint-disable-line no-unused-vars
 export let mesh_gradient, mesh_wireframe, mesh_anim;
 export let mat_gradient, mat_wireframe, mat_anim;
 export let obj_normals, obj_path;
-export let obj_axes, obj_marker;
+export let obj_axes, obj_marker, obj_camtarget;
 export let banner;
 
 export let config = {
@@ -122,8 +122,9 @@ async function setup() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, config.W / config.H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls.dampingFactor = 0.1;
   camera.position.z = 16;
+  controls.screenSpacePanning = true;
+  // controls.zoomSpeed = 2.0;
   util.setCameraState(settings.camera);
   tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
 
@@ -131,6 +132,13 @@ async function setup() {
   obj_axes = createAxesObj(10);
   obj_axes.visible = params.show_axes;
   scene.add( obj_axes );
+  
+  obj_camtarget = createCrossObj(5);
+  obj_camtarget.visible = params.show_axes;
+  scene.add(obj_camtarget);
+  const setCamtargetObj = () => { obj_camtarget.position.set(controls.target.x, controls.target.y, controls.target.z); };
+  controls.addEventListener('change', setCamtargetObj);
+  setCamtargetObj();
 
   mat_gradient = new THREE.RawShaderMaterial({
     uniforms: {
@@ -317,6 +325,19 @@ function createAxesObj(scale = 1) {
   return obj;
 }
 
+function createCrossObj(scale = 1) {
+  let geo = new THREE.Geometry();
+  geo.vertices.push(
+    new THREE.Vector3( -.5, 0, 0 ), new THREE.Vector3( .5, 0, 0 ), // x-axis (red)
+    new THREE.Vector3( 0, -.5, 0 ), new THREE.Vector3( 0, .5, 0 ), // y-axis (green)
+    new THREE.Vector3( 0, 0, -.5 ), new THREE.Vector3( 0, 0, .5 ), // z-axis (blue)
+  );
+  let color = new THREE.Color('#646464');
+  let mat = new THREE.LineBasicMaterial({color});
+  let obj = new THREE.LineSegments(geo, mat);
+  obj.scale.set(scale, scale, scale);
+  return obj;
+}
 
 // For testing normals of a BufferGeometry
 function createNormalsObj(inputGeo, length = 0.1) { // eslint-disable-line no-unused-vars
