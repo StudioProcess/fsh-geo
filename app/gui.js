@@ -34,7 +34,7 @@ export function create() {
   
   let anim = gui.addFolder('Animation');
   anim.open();
-  anim.add(params.animation, 'fraction', 0, 0.5, 0.001).onChange(a => { mat_anim.uniforms.fraction.value = a; });
+  anim.add(params.animation, 'fraction', 0, 1, 0.001).onChange(a => { mat_anim.uniforms.fraction.value = a; });
   anim.add(params.animation, 'center', 0, 1, 0.01).onChange(a => { mat_anim.uniforms.center.value = a; });
   anim.add(params.animation, 'speed', 0, 2).onChange(a => { mat_anim.uniforms.speed.value = a; });
   anim.add(params.animation, 'pathAnimSpeed', 0, 0.05).onChange(a => { mat_anim.uniforms.pathAnimSpeed.value = a; });

@@ -59,8 +59,8 @@ export let params = {
   autoGenerate: true,
   animation: {
     time: 0,
-    fraction: 0.2,
-    center: 0.5,
+    fraction: 1,
+    center: 0,
     speed: 1.0,
     pathAnimSpeed: 0.01,
     pathDispSpeed: 0.1,
@@ -591,7 +591,7 @@ function samplePath(s) {
 function getCurrentPathPos(s = 0) {
   let speed = params.animation.pathAnimSpeed * params.animation.speed;
   let time_mod = (speed * params.animation.time) % (1 - params.animation.fraction);
-  
+  if (Number.isNaN(time_mod)) time_mod = 0; // happens when param.animation.fraction becomes 1
   s = s * params.animation.fraction + time_mod;
   let center_s = params.animation.center * params.animation.fraction + time_mod;
   let path_pos = samplePath(s);
