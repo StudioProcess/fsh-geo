@@ -103,13 +103,7 @@ export let settings =
       "rotate": 0,
       "translateX": 0,
       "translateY": 0
-    },
-    "show_plane": true,
-    "show_wireframe": false,
-    "show_normals": false,
-    "show_path": false,
-    "show_axes": true,
-    "autoGenerate": true
+    }
   }
 }
 
