@@ -502,23 +502,29 @@ document.addEventListener("keydown", e => {
   else if (e.key == 'c') {
     rec.startstop(); // start/stop recording
   }
-  else if (e.key == 'v') {
-    rec.startstop( { start:0 } ); // record from sec 0
-  }
-  else if (e.key == 'b') {
-    rec.startstop( { start:0, duration:15 } ); // record 15 secs
-  }
+  // else if (e.key == 'v') {
+  //   rec.startstop( { start:0 } ); // record from sec 0
+  // }
+  // else if (e.key == 'b') {
+  //   rec.startstop( { start:0, duration:15 } ); // record 15 secs
+  // }
   else if (e.keyCode == 8) { resetView(); } // BACKSPACE
   else if (e.keyCode == 32) { animating = !animating; } // SPACE
 });
 
 
 function exportHires() {
-  if (params.show_axes) { obj_axes.visible = false; obj_marker.visible = false; obj_camtarget.visible = false; }
+  obj_axes.visible = false;
+  obj_marker.visible = false;
+  obj_camtarget.visible = false;
+  obj_path.visible = false;
   let saved = util.saveSettings();
   console.log(saved);
   tilesaver.save( {timestamp:saved.timestamp} ).then(f => {
-    if (params.show_axes) { obj_axes.visible = true; obj_marker.visible = true; obj_camtarget.visible = false; }
+    obj_axes.visible = params.show_axes;
+    obj_marker.visible = params.show_axes;
+    obj_camtarget.visible = params.show_axes;
+    obj_path.visible = params.show_path;
     console.log(`Saved to: ${f}`);
   });
 }
@@ -638,9 +644,11 @@ function updateAxesVisibility() {
     obj_axes.visible = false;
     obj_marker.visible = false;
     obj_camtarget.visible = false;
+    obj_path.visible = false;
   } else {
     obj_axes.visible = params.show_axes;
     obj_marker.visible = params.show_axes;
     obj_camtarget.visible = params.show_axes;
+    obj_path.visible = params.show_path;
   }
 }
