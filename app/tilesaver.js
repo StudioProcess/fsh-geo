@@ -6,6 +6,10 @@ export function init(_renderer, _scene, _camera, _tiles) {
   renderer = _renderer;
   scene = _scene;
   camera = _camera;
+  setNumTiles(_tiles)
+}
+
+export function setNumTiles(_tiles) {
   if (_tiles > 0) NUM_TILES = _tiles;
 }
 

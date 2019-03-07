@@ -1,15 +1,16 @@
 /* globals dat */
-import { params, mat_gradient, mat_wireframe, mesh_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform } from './main.js';
+import { config, params, mat_gradient, mat_wireframe, mesh_gradient, mesh_wireframe, obj_normals, obj_path, obj_axes, updateUVMatrix, setBackgroundColor, getColorsUniform, setExportMultiplier } from './main.js';
 let gui;
 export let view, colors;
 
 export function create() {
   gui = new dat.GUI({hideable:false});
-  gui.add(params, 'exportHires').name('Bild exportieren');
   gui.add(params, 'reset').name('Alles zurücksetzen');
+  gui.add(config, 'EXPORT_TILES', [4,6,8,10,12]).name('Exportqualität').onChange(setExportMultiplier);
+  gui.add(params, 'exportHires').name('Bild exportieren');
   
   view = gui.addFolder('Ansicht');
-  view.open();
+  // view.open();
   view.add(params, 'toggleFullscreen').name('Vollbild an/aus');
   view.addColor(params, 'bgColor').name('Hintergrund').onChange(a => {
     setBackgroundColor(a);

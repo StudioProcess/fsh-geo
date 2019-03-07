@@ -103,12 +103,9 @@ async function setup() {
 
   util.setCameraState(settings.camera);
   
-  let targetSize = [config.W * config.EXPORT_TILES, config.H * config.EXPORT_TILES];
-  let canvasSize = [renderer.domElement.width, renderer.domElement.height]; // cavas size (could be bigger because of devicePixelRatio)
-  let exportTiles = Math.ceil(targetSize[0] / canvasSize[0]);
-  let exportSize = [canvasSize[0]*exportTiles, canvasSize[1]*exportTiles];
-  console.log(`renderer: ${canvasSize[0]}x${canvasSize[1]} / export: ${exportSize[0]}x${exportSize[1]}`);
-  tilesaver.init(renderer, scene, camera, exportTiles);
+
+  tilesaver.init(renderer, scene, camera);
+  setExportMultiplier();
   
   // scene.add( createDistortedCylinderObj() );
   obj_axes = new THREE.Group();
@@ -484,7 +481,7 @@ function exportHires() {
     }).catch(() => {
       gui.lock(false);
     });
-  }, 20);
+  }, 100);
 }
 
 function saveURL(url, filename) {
@@ -548,4 +545,14 @@ export function updateUVMatrix() {
 
 export function setBackgroundColor(col) {
   document.querySelector('canvas').style.backgroundColor = col;
+}
+
+
+export function setExportMultiplier() {
+  let targetSize = [config.W * config.EXPORT_TILES, config.H * config.EXPORT_TILES];
+  let canvasSize = [renderer.domElement.width, renderer.domElement.height]; // cavas size (could be bigger because of devicePixelRatio)
+  let exportTiles = Math.ceil(targetSize[0] / canvasSize[0]);
+  let exportSize = [canvasSize[0]*exportTiles, canvasSize[1]*exportTiles];
+  tilesaver.setNumTiles(exportTiles);
+  console.log(`renderer: ${canvasSize[0]}x${canvasSize[1]} / export: ${exportSize[0]}x${exportSize[1]}`);
 }
