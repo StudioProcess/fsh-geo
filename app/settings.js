@@ -45,10 +45,6 @@ export let settings =
     "near": 0.01,
     "far": 1000
   },
-  "config": {
-    "W": 1280,
-    "H": 800,
-  },
   "params": {
     "bgColor": "#ffffff",
     "wireframeColor": "#d45156",

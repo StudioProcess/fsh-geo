@@ -17,7 +17,7 @@ export let banner;
 export let config = {
   W: 1280,
   H: 800,
-  EXPORT_TILES: 8,
+  EXPORT_TILES: 8, // even multiple of config.W/H: 2, 4, 6, 8, 10, 12
 };
 
 // Aircraft principal axes:
@@ -89,7 +89,7 @@ async function setup() {
     alpha: true
   });
   renderer.setSize( config.W, config.H );
-  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio( Math.min(2, window.devicePixelRatio) );
   document.body.appendChild( renderer.domElement );
   setBackgroundColor(params.bgColor);
   
@@ -102,7 +102,13 @@ async function setup() {
   // console.log(controls);
 
   util.setCameraState(settings.camera);
-  tilesaver.init(renderer, scene, camera, config.EXPORT_TILES);
+  
+  let targetSize = [config.W * config.EXPORT_TILES, config.H * config.EXPORT_TILES];
+  let canvasSize = [renderer.domElement.width, renderer.domElement.height]; // cavas size (could be bigger because of devicePixelRatio)
+  let exportTiles = Math.ceil(targetSize[0] / canvasSize[0]);
+  let exportSize = [canvasSize[0]*exportTiles, canvasSize[1]*exportTiles];
+  console.log(`renderer: ${canvasSize[0]}x${canvasSize[1]} / export: ${exportSize[0]}x${exportSize[1]}`);
+  tilesaver.init(renderer, scene, camera, exportTiles);
   
   // scene.add( createDistortedCylinderObj() );
   obj_axes = new THREE.Group();
@@ -478,7 +484,7 @@ function exportHires() {
     }).catch(() => {
       gui.lock(false);
     });
-  }, 10);
+  }, 20);
 }
 
 function saveURL(url, filename) {
