@@ -499,7 +499,7 @@ document.addEventListener("keydown", e => {
   else if (e.key == 'o') {
     exportOBJ(mesh_wireframe);
   }
-  else if (e.key == 'e') {
+  else if (e.key == 'e' || e.key == 'x') {
     exportHires();
   }
   else if (e.key == 'c') {
