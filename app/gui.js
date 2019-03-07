@@ -30,30 +30,30 @@ export function create() {
 }
 
 export function createExpert() {
-  gui = gui.addFolder('Expert');
-  gui.addColor(params, 'bgColor').onChange(a => {
+  let xgui = gui.addFolder('Expert');
+  xgui.addColor(params, 'bgColor').onChange(a => {
     setBackgroundColor(a);
   });
-  gui.addColor(params, 'wireframeColor').onChange(a => {
+  xgui.addColor(params, 'wireframeColor').onChange(a => {
     mat_wireframe.color = new THREE.Color(a);
   });
-  gui.add(params, 'show_plane').onChange(a => {
+  xgui.add(params, 'show_plane').onChange(a => {
     mesh_gradient.visible = a;
   });
-  gui.add(params, 'show_wireframe').onChange(a => {
+  xgui.add(params, 'show_wireframe').onChange(a => {
     mesh_wireframe.visible = a;
   });
-  gui.add(params, 'show_normals').onChange(a => {
+  xgui.add(params, 'show_normals').onChange(a => {
     obj_normals.visible = a;
   });
-  gui.add(params, 'show_path').onChange(a => {
+  xgui.add(params, 'show_path').onChange(a => {
     obj_path.visible = a;
   });
-  gui.add(params, 'show_axes').onChange(a => {
+  xgui.add(params, 'show_axes').onChange(a => {
     obj_axes.visible = a;
   });
   
-  let shading = gui.addFolder('Shading');
+  let shading = xgui.addFolder('Shading');
   shading.addColor(params.shading.colors, 0).name('color_0').onChange(setColors);
   shading.addColor(params.shading.colors, 1).name('color_1').onChange(setColors);
   shading.addColor(params.shading.colors, 2).name('color_2').onChange(setColors);
@@ -81,19 +81,19 @@ export function createExpert() {
   shading.add(params.shading, 'translateY', 0, 2, .01).onChange(() => updateUVMatrix());
   
   
-  let size = gui.addFolder('Size');
+  let size = xgui.addFolder('Size');
   size.add(params.banner_options, 'length', 1, 500, .1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'height', 1, 25, .1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'segment_detail', 1, 20, .1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'segment_proportion', 0.2, 5, .01).onFinishChange(autoGenerate);
   
-  addNoiseFolder(gui, params.banner_options, 'noise_heading', 'Heading');
-  addNoiseFolder(gui, params.banner_options, 'noise_pitch', 'Pitch');
-  addNoiseFolder(gui, params.banner_options, 'noise_roll', 'Roll');
-  addNoiseFolder(gui, params.banner_options, 'noise_displacement', 'Displacement', 4, 4);
+  addNoiseFolder(xgui, params.banner_options, 'noise_heading', 'Heading');
+  addNoiseFolder(xgui, params.banner_options, 'noise_pitch', 'Pitch');
+  addNoiseFolder(xgui, params.banner_options, 'noise_roll', 'Roll');
+  addNoiseFolder(xgui, params.banner_options, 'noise_displacement', 'Displacement', 4, 4);
   
-  gui.add(params, 'autoGenerate');
-  gui.add(params, 'generate');
+  xgui.add(params, 'autoGenerate');
+  xgui.add(params, 'generate');
 }
 
 function autoGenerate() {
