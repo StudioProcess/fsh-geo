@@ -81,7 +81,7 @@ export function create() {
   
   
   let size = gui.addFolder('Size');
-  size.add(params.banner_options, 'length', 1, 100, .1).onFinishChange(autoGenerate);
+  size.add(params.banner_options, 'length', 1, 500, 1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'height', 1, 25, .1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'segment_detail', 1, 20, .1).onFinishChange(autoGenerate);
   size.add(params.banner_options, 'segment_proportion', 0.2, 5, .01).onFinishChange(autoGenerate);
