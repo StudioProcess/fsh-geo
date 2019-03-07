@@ -250,6 +250,9 @@ function generateBanner() {
   if (mesh_gradient) mesh_gradient.geometry = banner.plane;
   if (mesh_wireframe) mesh_wireframe.geometry = banner.plane;
   if (obj_path) obj_path.geometry = banner.path;
+  
+  mesh_anim.geometry = banner.flat_plane;
+  mat_anim.uniforms.pathData.value = pathDataTexture(banner);
 }
 
 function createDistortedCylinderObj() { // eslint-disable-line
