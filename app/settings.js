@@ -9,13 +9,39 @@ COLORS FOR SEASON 2018/19
   "#8781bd"
 ]
 
-COLORS SEASON 2019/20 (not final)
+COLORS SEASON 2019/20
 
 "colors": [
   "#ff5959",
   "#ffea3b",
   "#ed1c24",
   "#c83f80"
+]
+
+COLORS SEASON 2020/21 (not final)
+
+// Variante 1
+"colors": [
+  "#df0024",
+  "#fbe667",
+  "#6fc3c1",
+  "#3db677"
+]
+
+// Variante 2
+"colors": [
+  "#df0024",
+  "#fbe667",
+  "#6fc3c1",
+  "#812d79"
+]
+
+// Variante 3
+"colors": [
+  "#df0024",
+  "#fbe667",
+  "#3db677",
+  "#485488"
 ]
 
 */
@@ -89,10 +115,10 @@ export let settings =
     },
     "shading": {
       "colors": [
-        "#ff5959",
-        "#ffea3b",
-        "#ed1c24",
-        "#c83f80"
+        "#df0024",
+        "#fbe667",
+        "#6fc3c1",
+        "#3db677"
       ],
       "emissiveIntesity": 0.87,
       "diffuseIntesity": 0.5700000000000001,
