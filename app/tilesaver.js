@@ -17,7 +17,10 @@ export function saveCanvas(canvas, filename) {
       let link = document.createElement('a');
       link.download = filename;
       link.href = url;
+      link.style.display = 'none';
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(url);
       resolve(filename);
     });

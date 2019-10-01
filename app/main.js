@@ -14,10 +14,11 @@ export let obj_axes, obj_origin, obj_camtarget;
 export let banner;
 
 
+// Note: This takes precedence over settings.js
 export let config = {
   W: 1280,
   H: 800,
-  EXPORT_TILES: 4,
+  EXPORT_TILES: 6, // Note: 5 is max for Firefox, Chrome goes higher
 };
 
 // Aircraft principal axes:
@@ -73,7 +74,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
 
 async function setup() {
-  Object.assign(config, settings.config);
+  let original_config = Object.assign({}, config);
+  Object.assign(config, settings.config, original_config);
   Object.assign(params, settings.params);
   banner_options = params.banner_options; // also set this object as well, since it is accessed directly
   

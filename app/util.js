@@ -93,6 +93,9 @@ export function saveSettings(_timestamp) {
   let data = JSON.stringify(state, null, 2);
   let file = new File([data], {type:"text/plain"});
   link.href = URL.createObjectURL(file);
+  link.style.display = 'none';
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
   return { filename, timestamp:_timestamp, data };
 }
