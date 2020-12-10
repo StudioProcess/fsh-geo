@@ -29,6 +29,73 @@ COLORS SEASON 2020/21
 
 */
 
+// SEASON 2021/22
+// VORSCHLAEGE MARTINA
+
+// // variante 1
+// "colors": [
+//   "#E30613",
+//   "#F39DAA",
+//   "#FFFFFF",
+//   "#00AB97"
+// ]
+// 
+// // variante 2
+// "colors": [
+//   "#E30613",
+//   "#F39DAA",
+//   "#FFFFFF",
+//   "#65B32E"
+// ]
+// 
+// // variante 3
+// "colors": [
+//   "#E30613",
+//   "#E6007E",
+//   "#FFFFFF",
+//   "#65B32E"
+// ]
+// 
+// // variante 4
+// "colors": [
+//   "#E30613",
+//   "#FFFFFF",
+//   "#65B32E",
+//   "#65B32E"
+// ]
+// 
+// // variante 5
+// "colors": [
+//   "#E30613",
+//   "#FFFFFF",
+//   "#00AB97",
+//   "#00AB97"
+// ]
+// 
+// // variante 6
+// "colors": [
+//   "#E30613",
+//   "#FFFFFF",
+//   "#C8D300",
+//   "#C8D300"
+// ]
+// 
+// // variante 7
+// "colors": [
+//   "#E30613",
+//   "#FFFFFF",
+//   "#65B32E",
+//   "#65B32E"
+// ]
+// 
+// // variante 8
+// "colors": [
+//   "#E30613",
+//   "#FFFFFF",
+//   "#8EC89A",
+//   "#8EC89A"
+// ]
+
 export let settings =
 
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
