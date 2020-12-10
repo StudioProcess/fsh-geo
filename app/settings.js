@@ -101,19 +101,19 @@ export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
 
-{ // sujet 2020/2021
+{
   "version": 5,
-  "timestamp": "2019-10-24T12:48:51.944Z",
+  "timestamp": "2020-12-10T15:24:02.477Z",
   "camera": {
     "position": {
-      "x": -14.350905231038094,
-      "y": -15.711663313247712,
-      "z": -5.161281232178043
+      "x": 26.54260186400359,
+      "y": -5.631686129266976,
+      "z": 24.05882320244363
     },
     "rotation": {
-      "_x": -0.30186951832781317,
-      "_y": 0.4405291819682414,
-      "_z": 0.13200840227762006,
+      "_x": -0.39289415931652,
+      "_y": 1.0219921411210169,
+      "_z": 0.3398613322218183,
       "_order": "XYZ"
     },
     "fov": 75,
@@ -128,30 +128,30 @@ export let settings =
   },
   "params": {
     "bgColor": "#ffffff",
-    "wireframeColor": "#d45156",
+    "wireframeColor": "#ff0009",
     "banner_options": {
       "length": 100,
-      "height": 8.5,
-      "segment_detail": 10.5,
+      "height": 9,
+      "segment_detail": 14.9,
       "segment_proportion": 2,
       "noise_heading": {
         "seed": 93,
-        "freq": 0.1,
-        "amp": 1.47,
+        "freq": 0.02,
+        "amp": 2,
         "octaves": 1,
         "persistence": 0.5
       },
       "noise_pitch": {
-        "seed": 222,
-        "freq": 0.2,
-        "amp": 0.06,
-        "octaves": 1,
-        "persistence": 0.5
+        "seed": 22,
+        "freq": 0.01,
+        "amp": 1.01,
+        "octaves": 4,
+        "persistence": 1
       },
       "noise_roll": {
         "seed": 333,
         "freq": 0.2,
-        "amp": 0.63,
+        "amp": 0.98,
         "octaves": 1,
         "persistence": 0.5
       },
@@ -165,10 +165,10 @@ export let settings =
     },
     "shading": {
       "colors": [
-        "#ed1c24",
-        "#00ffff",
-        "#ff0078",
-        "#ed1c24"
+        "#002dff",
+        "#828282",
+        "#002dff",
+        "#fbfdff"
       ],
       "emissiveIntesity": 0.96,
       "diffuseIntesity": 0.6900000000000001,
@@ -177,9 +177,9 @@ export let settings =
       "flatShading": true,
       "scaleX": 1,
       "scaleY": 0.8,
-      "rotate": 48,
-      "translateX": 1.09,
-      "translateY": 0
+      "rotate": 180,
+      "translateX": 0.98,
+      "translateY": 0.98
     },
     "show_plane": true,
     "show_wireframe": false,
