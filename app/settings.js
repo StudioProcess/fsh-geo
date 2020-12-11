@@ -101,19 +101,19 @@ export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
 
-{
+{ // last variant from meeting december 11 2020
   "version": 5,
-  "timestamp": "2020-12-10T15:24:02.477Z",
+  "timestamp": "2020-12-11T17:13:20.658Z",
   "camera": {
     "position": {
-      "x": 26.54260186400359,
-      "y": -5.631686129266976,
-      "z": 24.05882320244363
+      "x": -38.342536374859186,
+      "y": -1.0308877035832467,
+      "z": -35.582877516139206
     },
     "rotation": {
-      "_x": -0.39289415931652,
-      "_y": 1.0219921411210169,
-      "_z": 0.3398613322218183,
+      "_x": -2.700976072320819,
+      "_y": -0.43088060459741595,
+      "_z": -2.9471352454905193,
       "_order": "XYZ"
     },
     "fov": 75,
@@ -128,30 +128,30 @@ export let settings =
   },
   "params": {
     "bgColor": "#ffffff",
-    "wireframeColor": "#ff0009",
+    "wireframeColor": "#d45156",
     "banner_options": {
       "length": 100,
-      "height": 9,
-      "segment_detail": 14.9,
+      "height": 18.8,
+      "segment_detail": 10.700000000000001,
       "segment_proportion": 2,
       "noise_heading": {
-        "seed": 93,
-        "freq": 0.02,
-        "amp": 2,
+        "seed": 17,
+        "freq": 0.14,
+        "amp": 1.27,
         "octaves": 1,
         "persistence": 0.5
       },
       "noise_pitch": {
-        "seed": 22,
-        "freq": 0.01,
-        "amp": 1.01,
-        "octaves": 4,
-        "persistence": 1
+        "seed": 99,
+        "freq": 0.2,
+        "amp": 0.06,
+        "octaves": 1,
+        "persistence": 0.5
       },
       "noise_roll": {
         "seed": 333,
         "freq": 0.2,
-        "amp": 0.98,
+        "amp": 0.96,
         "octaves": 1,
         "persistence": 0.5
       },
@@ -165,21 +165,21 @@ export let settings =
     },
     "shading": {
       "colors": [
-        "#002dff",
-        "#828282",
-        "#002dff",
-        "#fbfdff"
+        "#4037dc",
+        "#ed651c",
+        "#4037dc",
+        "#ed1c24"
       ],
-      "emissiveIntesity": 0.96,
-      "diffuseIntesity": 0.6900000000000001,
-      "lambertStrength": 0.39,
-      "lambertHarshness": 3.35,
+      "emissiveIntesity": 1.46,
+      "diffuseIntesity": 0.27,
+      "lambertStrength": 0.75,
+      "lambertHarshness": 3.13,
       "flatShading": true,
       "scaleX": 1,
-      "scaleY": 0.8,
-      "rotate": 180,
-      "translateX": 0.98,
-      "translateY": 0.98
+      "scaleY": 1,
+      "rotate": 23,
+      "translateX": 0,
+      "translateY": 0
     },
     "show_plane": true,
     "show_wireframe": false,
@@ -189,6 +189,273 @@ export let settings =
     "autoGenerate": true
   }
 }
+
+// { // almost last variant from meeting december 11 2020
+//   "version": 5,
+//   "timestamp": "2020-12-11T16:55:17.035Z",
+//   "camera": {
+//     "position": {
+//       "x": -26.750667204554393,
+//       "y": 2.0687666693775046,
+//       "z": -12.905488248925872
+//     },
+//     "rotation": {
+//       "_x": -2.486177700809464,
+//       "_y": -0.8604779556612938,
+//       "_z": -2.6138736846575528,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 6
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "wireframeColor": "#d45156",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 8.5,
+//       "segment_detail": 10.700000000000001,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 17,
+//         "freq": 0.14,
+//         "amp": 1.27,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 99,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.96,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 1.33,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#4037dc",
+//         "#ed651c",
+//         "#4037dc",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 1.46,
+//       "diffuseIntesity": 0.27,
+//       "lambertStrength": 0.75,
+//       "lambertHarshness": 3.13,
+//       "flatShading": true,
+//       "scaleX": 1,
+//       "scaleY": 1,
+//       "rotate": 23,
+//       "translateX": 0,
+//       "translateY": 0
+//     },
+//     "show_plane": true,
+//     "show_wireframe": false,
+//     "show_normals": false,
+//     "show_path": false,
+//     "show_axes": false,
+//     "autoGenerate": true
+//   }
+// }
+
+// { // green version from meeting december 11 2020
+//   "version": 5,
+//   "timestamp": "2020-12-11T15:24:00.655Z",
+//   "camera": {
+//     "position": {
+//       "x": -14.528228297098885,
+//       "y": -16.32584714295703,
+//       "z": -4.935691592774175
+//     },
+//     "rotation": {
+//       "_x": -0.15939020889663635,
+//       "_y": 0.4016673924979825,
+//       "_z": 0.06276474284575197,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 6
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "wireframeColor": "#d45156",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 8.5,
+//       "segment_detail": 10.5,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 93,
+//         "freq": 0.1,
+//         "amp": 1.47,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 222,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.63,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 1.33,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#ed1c24",
+//         "#3cff00",
+//         "#ee12fc",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 1.05,
+//       "diffuseIntesity": 1.05,
+//       "lambertStrength": 0.32,
+//       "lambertHarshness": 3.13,
+//       "flatShading": true,
+//       "scaleX": 1,
+//       "scaleY": 0.8,
+//       "rotate": 21,
+//       "translateX": 0.91,
+//       "translateY": 0
+//     },
+//     "show_plane": true,
+//     "show_wireframe": false,
+//     "show_normals": false,
+//     "show_path": false,
+//     "show_axes": false,
+//     "autoGenerate": true
+//   }
+// }
+
+// { // form in blue
+//   "version": 5,
+//   "timestamp": "2020-12-10T15:24:02.477Z",
+//   "camera": {
+//     "position": {
+//       "x": 26.54260186400359,
+//       "y": -5.631686129266976,
+//       "z": 24.05882320244363
+//     },
+//     "rotation": {
+//       "_x": -0.39289415931652,
+//       "_y": 1.0219921411210169,
+//       "_z": 0.3398613322218183,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 6
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "wireframeColor": "#ff0009",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 9,
+//       "segment_detail": 14.9,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 93,
+//         "freq": 0.02,
+//         "amp": 2,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 22,
+//         "freq": 0.01,
+//         "amp": 1.01,
+//         "octaves": 4,
+//         "persistence": 1
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.98,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 1.33,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#002dff",
+//         "#828282",
+//         "#002dff",
+//         "#fbfdff"
+//       ],
+//       "emissiveIntesity": 0.96,
+//       "diffuseIntesity": 0.6900000000000001,
+//       "lambertStrength": 0.39,
+//       "lambertHarshness": 3.35,
+//       "flatShading": true,
+//       "scaleX": 1,
+//       "scaleY": 0.8,
+//       "rotate": 180,
+//       "translateX": 0.98,
+//       "translateY": 0.98
+//     },
+//     "show_plane": true,
+//     "show_wireframe": false,
+//     "show_normals": false,
+//     "show_path": false,
+//     "show_axes": false,
+//     "autoGenerate": true
+//   }
+// }
 
 // { // sujet 2020/2021
 //   "version": 5,
