@@ -115,21 +115,19 @@ export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
 
-// SEASON 2020/2021
-
 {
   "version": 4,
-  "timestamp": "2019-11-04T14:10:56.329Z",
+  "timestamp": "2021-01-19T14:02:17.167Z",
   "camera": {
     "position": {
-      "x": -3.204871545465469,
-      "y": 3.5450148005669306,
-      "z": -1.5948293126608992
+      "x": -8.482273760534587,
+      "y": 11.043268807237647,
+      "z": -0.3279832140826424
     },
     "rotation": {
-      "_x": -0.9569723187358868,
-      "_y": 0.16285871339815247,
-      "_z": 0.2261704763590013,
+      "_x": -1.288190693724492,
+      "_y": 0.08929609882992465,
+      "_z": 0.29796573515819935,
       "_order": "XYZ"
     },
     "fov": 75,
@@ -165,36 +163,36 @@ export let settings =
       },
       "noise_roll": {
         "seed": 333,
-        "freq": 0.01,
-        "amp": 0.12,
+        "freq": 0.2,
+        "amp": 0.06,
         "octaves": 1,
         "persistence": 0.5
       },
       "noise_displacement": {
         "seed": 0,
         "freq": 0.59,
-        "amp": 0.53,
+        "amp": 0.62,
         "octaves": 4,
         "persistence": 0.26
       }
     },
     "shading": {
       "colors": [
-        "#ed1c24",
-        "#00ffff",
-        "#ff0078",
+        "#262275",
+        "#c3612d",
+        "#262275",
         "#ed1c24"
       ],
-      "emissiveIntesity": 0.96,
-      "diffuseIntesity": 0.6900000000000001,
-      "lambertStrength": 0.36,
-      "lambertHarshness": 6.88,
+      "emissiveIntesity": 1.45,
+      "diffuseIntesity": 0.3,
+      "lambertStrength": 0.25,
+      "lambertHarshness": 7.26,
       "flatShading": true,
-      "scaleX": 0.16,
-      "scaleY": 0.11,
-      "rotate": 27,
-      "translateX": 1.27,
-      "translateY": 0
+      "scaleX": 0.11,
+      "scaleY": 0.75,
+      "rotate": 102,
+      "translateX": 0.3,
+      "translateY": 1.32
     },
     "show_plane": false,
     "show_wireframe": false,
@@ -204,7 +202,7 @@ export let settings =
     "show_axes": true,
     "autoGenerate": false,
     "animation": {
-      "time": 1273.957079,
+      "time": 1553.7562930000001,
       "fraction": 0.433,
       "center": 1,
       "speed": 1,
@@ -220,6 +218,217 @@ export let settings =
     "wireframeColor": "#d45156"
   }
 }
+
+// {
+//   "version": 4,
+//   "timestamp": "2019-11-04T14:10:56.329Z",
+//   "camera": {
+//     "position": {
+//       "x": -3.204871545465469,
+//       "y": 3.5450148005669306,
+//       "z": -1.5948293126608992
+//     },
+//     "rotation": {
+//       "_x": -0.9569723187358868,
+//       "_y": 0.16285871339815247,
+//       "_z": 0.2261704763590013,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 4
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 15.5,
+//       "segment_detail": 10.5,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 93,
+//         "freq": 0.1,
+//         "amp": 0.08,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 222,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 0.62,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#262275",
+//         "#c3612d",
+//         "#262275",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 1.46,
+//       "diffuseIntesity": 0.27,
+//       "lambertStrength": 0.75,
+//       "lambertHarshness": 3.13,
+//       "flatShading": true,
+//       "scaleX": 0.14,
+//       "scaleY": 0.25,
+//       "rotate": 123,
+//       "translateX": 0,
+//       "translateY": 0
+//     },
+//     "show_plane": false,
+//     "show_wireframe": false,
+//     "show_anim": true,
+//     "show_normals": false,
+//     "show_path": true,
+//     "show_axes": true,
+//     "autoGenerate": false,
+//     "animation": {
+//       "time": 1273.957079,
+//       "fraction": 0.433,
+//       "center": 1,
+//       "speed": 1,
+//       "pathAnimSpeed": 0.009000000000000001,
+//       "pathDispSpeed": 0.1,
+//       "pathDispAmp": 0.1,
+//       "pathDispFreq": 0.1,
+//       "camPos": 0.5,
+//       "camLock": false,
+//       "camDist": 2,
+//       "distLock": false
+//     },
+//     "wireframeColor": "#d45156"
+//   }
+// }
+
+
+// SEASON 2020/2021
+
+// {
+//   "version": 4,
+//   "timestamp": "2019-11-04T14:10:56.329Z",
+//   "camera": {
+//     "position": {
+//       "x": -3.204871545465469,
+//       "y": 3.5450148005669306,
+//       "z": -1.5948293126608992
+//     },
+//     "rotation": {
+//       "_x": -0.9569723187358868,
+//       "_y": 0.16285871339815247,
+//       "_z": 0.2261704763590013,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 4
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 15.5,
+//       "segment_detail": 10.5,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 93,
+//         "freq": 0.1,
+//         "amp": 0.08,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 222,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.01,
+//         "amp": 0.12,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 0.53,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#ed1c24",
+//         "#00ffff",
+//         "#ff0078",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 0.96,
+//       "diffuseIntesity": 0.6900000000000001,
+//       "lambertStrength": 0.36,
+//       "lambertHarshness": 6.88,
+//       "flatShading": true,
+//       "scaleX": 0.16,
+//       "scaleY": 0.11,
+//       "rotate": 27,
+//       "translateX": 1.27,
+//       "translateY": 0
+//     },
+//     "show_plane": false,
+//     "show_wireframe": false,
+//     "show_anim": true,
+//     "show_normals": false,
+//     "show_path": true,
+//     "show_axes": true,
+//     "autoGenerate": false,
+//     "animation": {
+//       "time": 1273.957079,
+//       "fraction": 0.433,
+//       "center": 1,
+//       "speed": 1,
+//       "pathAnimSpeed": 0.009000000000000001,
+//       "pathDispSpeed": 0.1,
+//       "pathDispAmp": 0.1,
+//       "pathDispFreq": 0.1,
+//       "camPos": 0.5,
+//       "camLock": false,
+//       "camDist": 2,
+//       "distLock": false
+//     },
+//     "wireframeColor": "#d45156"
+//   }
+// }
 
 // {
 //   "version": 5,
