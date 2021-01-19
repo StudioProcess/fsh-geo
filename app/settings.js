@@ -131,13 +131,13 @@ export let settings =
     "wireframeColor": "#d45156",
     "banner_options": {
       "length": 100,
-      "height": 18.8,
+      "height": 9,
       "segment_detail": 10.700000000000001,
       "segment_proportion": 2,
       "noise_heading": {
         "seed": 17,
         "freq": 0.14,
-        "amp": 1.27,
+        "amp": 0.8300000000000001,
         "octaves": 1,
         "persistence": 0.5
       },
@@ -158,16 +158,16 @@ export let settings =
       "noise_displacement": {
         "seed": 0,
         "freq": 0.59,
-        "amp": 1.33,
+        "amp": 1.1300000000000001,
         "octaves": 4,
         "persistence": 0.26
       }
     },
     "shading": {
       "colors": [
-        "#4037dc",
-        "#ed651c",
-        "#4037dc",
+        "#262275",
+        "#c3612d",
+        "#262275",
         "#ed1c24"
       ],
       "emissiveIntesity": 1.46,
@@ -175,8 +175,8 @@ export let settings =
       "lambertStrength": 0.75,
       "lambertHarshness": 3.13,
       "flatShading": true,
-      "scaleX": 1,
-      "scaleY": 1,
+      "scaleX": 0.63,
+      "scaleY": 0.49,
       "rotate": 23,
       "translateX": 0,
       "translateY": 0
@@ -189,6 +189,95 @@ export let settings =
     "autoGenerate": true
   }
 }
+
+// { // last variant from meeting december 11 2020
+//   "version": 5,
+//   "timestamp": "2020-12-11T17:13:20.658Z",
+//   "camera": {
+//     "position": {
+//       "x": -38.342536374859186,
+//       "y": -1.0308877035832467,
+//       "z": -35.582877516139206
+//     },
+//     "rotation": {
+//       "_x": -2.700976072320819,
+//       "_y": -0.43088060459741595,
+//       "_z": -2.9471352454905193,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 6
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "wireframeColor": "#d45156",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 18.8,
+//       "segment_detail": 10.700000000000001,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 17,
+//         "freq": 0.14,
+//         "amp": 1.27,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 99,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.96,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 1.33,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#4037dc",
+//         "#ed651c",
+//         "#4037dc",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 1.46,
+//       "diffuseIntesity": 0.27,
+//       "lambertStrength": 0.75,
+//       "lambertHarshness": 3.13,
+//       "flatShading": true,
+//       "scaleX": 1,
+//       "scaleY": 1,
+//       "rotate": 23,
+//       "translateX": 0,
+//       "translateY": 0
+//     },
+//     "show_plane": true,
+//     "show_wireframe": false,
+//     "show_normals": false,
+//     "show_path": false,
+//     "show_axes": false,
+//     "autoGenerate": true
+//   }
+// }
 
 // { // almost last variant from meeting december 11 2020
 //   "version": 5,
