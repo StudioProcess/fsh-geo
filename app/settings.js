@@ -145,7 +145,7 @@ export let settings =
     "banner_options": {
       "length": 100,
       "height": 15.5,
-      "segment_detail": 10.5,
+      "segment_detail": 5.5,
       "segment_proportion": 2,
       "noise_heading": {
         "seed": 93,
@@ -170,7 +170,7 @@ export let settings =
       },
       "noise_displacement": {
         "seed": 0,
-        "freq": 0.59,
+        "freq": 0.75,
         "amp": 0.62,
         "octaves": 4,
         "persistence": 0.26
@@ -185,8 +185,8 @@ export let settings =
       ],
       "emissiveIntesity": 1.45,
       "diffuseIntesity": 0.3,
-      "lambertStrength": 0.25,
-      "lambertHarshness": 7.26,
+      "lambertStrength": 0.29,
+      "lambertHarshness": 5.35,
       "flatShading": true,
       "scaleX": 0.11,
       "scaleY": 0.75,
