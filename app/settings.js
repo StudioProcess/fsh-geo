@@ -115,8 +115,8 @@ export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
 
-{
-  "version": 4,
+{ // animation season 21/22
+  "version": 4, 
   "timestamp": "2021-01-19T14:02:17.167Z",
   "camera": {
     "position": {
