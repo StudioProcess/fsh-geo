@@ -101,19 +101,19 @@ export let settings =
 /* PASTE CONTENTS OF SETTINGS FILE BELOW */
 /* ------------------------------------- */
 
-{ // Variante B mit Martina
+{ // talk sujet: new visual instruments
   "version": 5,
-  "timestamp": "2021-01-19T09:35:02.676Z",
+  "timestamp": "2022-05-09T09:58:35.596Z",
   "camera": {
     "position": {
-      "x": -25.198944024272414,
-      "y": 4.914864241300708,
-      "z": -2.8497201108744523
+      "x": -8.982058485412532,
+      "y": 2.935865088691528,
+      "z": 1.7876368350187941
     },
     "rotation": {
-      "_x": -1.065543976038573,
-      "_y": -0.33265785697481276,
-      "_z": -0.5333056302063568,
+      "_x": -1.0208897342615468,
+      "_y": -0.4321031247689801,
+      "_z": -0.599356988215914,
       "_order": "XYZ"
     },
     "fov": 75,
@@ -131,11 +131,11 @@ export let settings =
     "wireframeColor": "#d45156",
     "banner_options": {
       "length": 100,
-      "height": 9,
+      "height": 2.7,
       "segment_detail": 10.700000000000001,
       "segment_proportion": 2,
       "noise_heading": {
-        "seed": 17,
+        "seed": 29,
         "freq": 0.14,
         "amp": 1.27,
         "octaves": 1,
@@ -165,19 +165,19 @@ export let settings =
     },
     "shading": {
       "colors": [
-        "#262275",
-        "#c3612d",
-        "#262275",
-        "#ed1c24"
+        "#000000",
+        "#000000",
+        "#ffffff",
+        "#000000"
       ],
-      "emissiveIntesity": 1.46,
-      "diffuseIntesity": 0.27,
-      "lambertStrength": 0.75,
-      "lambertHarshness": 3.13,
+      "emissiveIntesity": 2,
+      "diffuseIntesity": 0.52,
+      "lambertStrength": 1,
+      "lambertHarshness": 0,
       "flatShading": true,
-      "scaleX": 0.63,
-      "scaleY": 0.49,
-      "rotate": 23,
+      "scaleX": 0.01,
+      "scaleY": 0.01,
+      "rotate": 82,
       "translateX": 0,
       "translateY": 0
     },
@@ -189,6 +189,95 @@ export let settings =
     "autoGenerate": true
   }
 }
+
+// { // Sujet 2021/2022 Variante B mit Martina
+//   "version": 5,
+//   "timestamp": "2021-01-19T09:35:02.676Z",
+//   "camera": {
+//     "position": {
+//       "x": -25.198944024272414,
+//       "y": 4.914864241300708,
+//       "z": -2.8497201108744523
+//     },
+//     "rotation": {
+//       "_x": -1.065543976038573,
+//       "_y": -0.33265785697481276,
+//       "_z": -0.5333056302063568,
+//       "_order": "XYZ"
+//     },
+//     "fov": 75,
+//     "zoom": 1,
+//     "near": 0.01,
+//     "far": 1000
+//   },
+//   "config": {
+//     "W": 1280,
+//     "H": 800,
+//     "EXPORT_TILES": 6
+//   },
+//   "params": {
+//     "bgColor": "#ffffff",
+//     "wireframeColor": "#d45156",
+//     "banner_options": {
+//       "length": 100,
+//       "height": 9,
+//       "segment_detail": 10.700000000000001,
+//       "segment_proportion": 2,
+//       "noise_heading": {
+//         "seed": 17,
+//         "freq": 0.14,
+//         "amp": 1.27,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_pitch": {
+//         "seed": 99,
+//         "freq": 0.2,
+//         "amp": 0.06,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_roll": {
+//         "seed": 333,
+//         "freq": 0.2,
+//         "amp": 0.96,
+//         "octaves": 1,
+//         "persistence": 0.5
+//       },
+//       "noise_displacement": {
+//         "seed": 0,
+//         "freq": 0.59,
+//         "amp": 1.1300000000000001,
+//         "octaves": 4,
+//         "persistence": 0.26
+//       }
+//     },
+//     "shading": {
+//       "colors": [
+//         "#262275",
+//         "#c3612d",
+//         "#262275",
+//         "#ed1c24"
+//       ],
+//       "emissiveIntesity": 1.46,
+//       "diffuseIntesity": 0.27,
+//       "lambertStrength": 0.75,
+//       "lambertHarshness": 3.13,
+//       "flatShading": true,
+//       "scaleX": 0.63,
+//       "scaleY": 0.49,
+//       "rotate": 23,
+//       "translateX": 0,
+//       "translateY": 0
+//     },
+//     "show_plane": true,
+//     "show_wireframe": false,
+//     "show_normals": false,
+//     "show_path": false,
+//     "show_axes": false,
+//     "autoGenerate": true
+//   }
+// }
 
 // { // Variante A mit Martina
 //   "version": 5,
